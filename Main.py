@@ -1,7 +1,5 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-
-
 from dotenv import load_dotenv
 import os
 
@@ -14,7 +12,10 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     scope="playlist-modify-public playlist-modify-private user-library-read"
 ))
 
+
 user_id = sp.current_user()['id']
+
+playlist_id=None
 
 '''
 def get_all_liked_tracks(sp):
@@ -37,7 +38,7 @@ liked_tracks = get_all_liked_tracks(sp)
 '''
 
 
-def checkIfPlaylistExists(playlist_name_to_find):
+def checkIfPlaylistExists(playlist_id):
     playlists = []
     limit = 50
     offset = 0
@@ -50,19 +51,12 @@ def checkIfPlaylistExists(playlist_name_to_find):
         else:
             break
 
-    print("All your playlists:")
-    for pl in playlists:
-        print(f"- {pl['name']}")
 
-    # Check if playlist exists
     for pl in playlists:
-        if pl['name'] == playlist_name_to_find:
-            print(f"Playlist '{playlist_name_to_find}' FOUND.")
+        print(pl['id'])
+        if pl['id'] == playlist_id:
             return True
-
-    print(f"Playlist '{playlist_name_to_find}' NOT found.")
     return False
-
 
 
 '''
@@ -85,8 +79,46 @@ def is_track_in_playlist(sp, playlist_id, track_uri):
 
 '''
 
-if checkIfPlaylistExists("Moja playlista #7") == False:
-    plajlista = sp.user_playlist_create(user=user_id, name="Moja playlista #7", public=False)
+#if checkIfPlaylistExists("playlist_2000") == False:
+    #playlist_2000 = sp.user_playlist_create(user=user_id, name="playlist_2000", public=False)
+    #playlist_id=playlist_2000['id']
+
+
+playlist_2000 = sp.user_playlist_create(user=user_id, name="Franciszek", public=False)
+# Fetch all playlists
+def get_all_playlists(sp):
+    all_playlists = []
+    offset = 0
+    limit = 50
+
+    while True:
+        results = sp.current_user_playlists(limit=limit, offset=offset)
+        items = results['items']
+        if not items:
+            break
+        all_playlists.extend([item['name'] for item in items])
+        offset += limit
+
+    return all_playlists
+
+print("Fetching all playlists...")
+print(get_all_playlists(sp))
+
+
+playlists = []
+limit = 50
+offset = 0
+
+#while True:
+        #response = sp.current_user_playlists(limit=limit, offset=offset)
+        #playlists.extend(response['items'])
+        #if response['next']:
+        #    offset += limit
+        #else:
+        #    break
+
+
+
 
 '''
 # Print first few
@@ -95,8 +127,8 @@ for idx, item in enumerate(liked_tracks[:3], 1):
     uris = [item['track']['uri']]
     print (int(track['album']['release_date'].split("-")[0]))
     if int(track['album']['release_date'].split("-")[0]) >= 2000:
-        if not is_track_in_playlist(sp, plajlista['id'], uris):
-            sp.playlist_add_items(playlist_id=plajlista['id'], items=uris)
+        if not is_track_in_playlist(sp, playlist_2000['id'], uris):
+            sp.playlist_add_items(playlist_id=playlist_2000['id'], items=uris)
         
 '''
 
