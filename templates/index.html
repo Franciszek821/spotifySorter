@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head><title>Spotify Sorter</title></head>
+<head>
+    <title>Spotify Sorter</title>
+</head>
 <body>
-  <h1>Spotify Sorter</h1>
-  <form method="POST">
-    <button type="submit">Do the thing</button>
-  </form>
-
-  {% if message %}
-    <p>{{ message }}</p>
-  {% endif %}
+    <h1>Spotify Playlist Sorter</h1>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <form method="post">
+        <button type="submit" name="action" value="authorization">Authorize</button>
+        <button type="submit" name="action" value="sort">Sort Playlists</button>
+    </form>
 </body>
 </html>
