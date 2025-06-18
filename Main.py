@@ -94,7 +94,7 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
 
 def sort(sp, user_id):
 
-    playlists = ["older", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2020"]
+    playlists = ["older", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2021"]
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
