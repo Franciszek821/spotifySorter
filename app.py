@@ -29,7 +29,8 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
             sort(sp, user_id)
-            message = "Sorted your liked tracks!"
+            message = user_id
+            
         elif action == 'authorization':
             return redirect(url_for('login'))  # Starts login flow
 
