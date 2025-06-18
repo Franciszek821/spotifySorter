@@ -100,21 +100,21 @@ def sort(sp, user_id):
 
     playlist_cache = {}  # {year_str: playlist_id}
 
-    for i in liked_tracks[:100]:
+    for i in liked_tracks[:5]:
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
-    
+
         # Determine target playlist name
         target_playlist = "older" if year < 1940 else None
         for pla in playlists:
             if pla != "older" and int(pla) <= year < int(pla) + 10:
                 target_playlist = pla
                 break
-            
+
         if not target_playlist:
             continue  # Skip unknown years
-        
+
         # Create playlist if needed and cache it
         if target_playlist not in playlist_cache:
             if not checkIfPlaylistExists(sp, target_playlist):
@@ -123,10 +123,10 @@ def sort(sp, user_id):
             playlist_cache[target_playlist] = playlist_id
         else:
             playlist_id = playlist_cache[target_playlist]
-    
+
         # Only add song if not already in playlist
         if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+            sp.playlist_add_items(playlist_id=playlist_id, items=song_id)
 
 
 
