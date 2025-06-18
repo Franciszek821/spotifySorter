@@ -5,7 +5,14 @@ import os
 
 
 
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+    client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+    client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+    redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+    scope="playlist-modify-public playlist-modify-private user-library-read"
+))
 
+user_id = sp.current_user()['id']
 
 
 def get_all_liked_tracks(sp):
@@ -128,7 +135,8 @@ def sort(sp, user_id):
             if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                 sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
-
+def dupa():
+    sort(sp, user_id)
 
 
 

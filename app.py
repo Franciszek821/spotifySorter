@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-from Main import sort
+from Main import dupa
 from dotenv import load_dotenv
 
 
@@ -31,7 +31,7 @@ def index():
 
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
-            message = sort(sp, user_id)
+            dupa()
             #message = sp.current_user_saved_tracks(limit=1, offset=0)
 
 
