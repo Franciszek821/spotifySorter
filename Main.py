@@ -116,6 +116,7 @@ def sort(sp, user_id):
 
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                     sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+                    print(f"Added {track['name']} to playlist {pla}")
                 break 
 
         if year < 1940:
