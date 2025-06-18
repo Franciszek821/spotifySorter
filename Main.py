@@ -7,7 +7,8 @@ import os
 app = Flask(__name__)
 
 
-load_dotenv()
+# Load local .env file variables if running locally
+#load_dotenv()
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=os.getenv("SPOTIPY_CLIENT_ID"),
