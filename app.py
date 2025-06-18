@@ -28,8 +28,8 @@ def index():
 
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
-            sort(sp, user_id)
-            message = sp.current_user_saved_tracks(limit=1, offset=0)
+            message = sort(sp, user_id)
+            #message = sp.current_user_saved_tracks(limit=1, offset=0)
 
 
         elif action == 'authorization':
