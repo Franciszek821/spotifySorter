@@ -108,10 +108,11 @@ def sort(sp, user_id):
                 continue
 
             if year >= int(pla) and year < int(pla) + 10:
-                if not checkIfPlaylistExists(sp, str(pla)):
+                playlist_id = get_playlist_id_by_name(sp, pla)
+                if not playlist_id:
                     sp.user_playlist_create(user=user_id, name=pla, public=False)
+                    playlist_id = get_playlist_id_by_name(sp, pla)
 
-                playlist_id = get_playlist_id_by_name(sp, str(pla))
 
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                     sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
