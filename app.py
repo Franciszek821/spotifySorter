@@ -12,7 +12,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 load_dotenv()
 
-'''
+
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=os.getenv("SPOTIPY_CLIENT_ID"),
     client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
@@ -20,7 +20,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     scope="playlist-modify-public playlist-modify-private user-library-read"
 ))
 
-'''
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -29,8 +29,16 @@ def index():
         action = request.form.get('action')
         if action == 'sort':
             message = "Sorting your liked tracks..."
+            sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+                client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+                client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+                redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+                scope="playlist-modify-public playlist-modify-private user-library-read"
+            ))
+            user_id = sp.current_user()['id']
         elif action == 'authorization':
             message = "Please log in to Spotify to sort your liked tracks."
+            sort(sp, user_id)
 
     return render_template("index.html", message=message)
 
