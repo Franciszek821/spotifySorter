@@ -93,21 +93,21 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
 
 def sort(sp, user_id):
 
-    playlists = ["older", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2020"]
+    playlists = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
 
     playlist_cache = {}  # {year_str: playlist_id}
 
-    for i in liked_tracks[:5]:
+    for i in liked_tracks[:3]:
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
 
         # Determine target playlist name
         target_playlist = "older" if year < 1940 else None
-        for pla in playlists:
+        for pla in playlists[:2]:
             if pla != "older" and int(pla) <= year < int(pla) + 10:
                 target_playlist = pla
                 break
