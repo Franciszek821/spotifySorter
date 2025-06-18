@@ -15,7 +15,20 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 
 
-
+def get_spotify_client():
+    token_info = session.get("token_info", None)
+    if not token_info:
+        return None
+    sp_oauth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+        scope="playlist-modify-public playlist-modify-private user-library-read"
+    )
+    if sp_oauth.is_token_expired(token_info):
+        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+        session["token_info"] = token_info
+    return spotipy.Spotify(auth=token_info['access_token'])
 
 
 
@@ -25,11 +38,9 @@ def index():
     if request.method == "POST":
         action = request.form.get('action')
         if action == 'sort':
-            token_info = session.get("token_info", None)
-            if not token_info:
+            sp = get_spotify_client()
+            if not sp:
                 return redirect(url_for('login'))
-
-            sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
             message = sort(sp, user_id)
             #message = sp.current_user_saved_tracks(limit=1, offset=0)
