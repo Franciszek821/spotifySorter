@@ -5,8 +5,7 @@ import os
 
 
 
-# Load local .env file variables if running locally
-#load_dotenv()
+
 
 
 def get_all_liked_tracks(sp):
@@ -94,38 +93,41 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
 
 def sort(sp, user_id):
 
-    playlists = ["older", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2021"]
+    playlists = ["older", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010", "2020"]
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
+
+    playlist_cache = {}  # {year_str: playlist_id}
 
     for i in liked_tracks[:100]:
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
-
+    
+        # Determine target playlist name
+        target_playlist = "older" if year < 1940 else None
         for pla in playlists:
-            if pla == "older":
-                continue
+            if pla != "older" and int(pla) <= year < int(pla) + 10:
+                target_playlist = pla
+                break
+            
+        if not target_playlist:
+            continue  # Skip unknown years
+        
+        # Create playlist if needed and cache it
+        if target_playlist not in playlist_cache:
+            if not checkIfPlaylistExists(sp, target_playlist):
+                sp.user_playlist_create(user=user_id, name=target_playlist, public=False)
+            playlist_id = get_playlist_id_by_name(sp, target_playlist)
+            playlist_cache[target_playlist] = playlist_id
+        else:
+            playlist_id = playlist_cache[target_playlist]
+    
+        # Only add song if not already in playlist
+        if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
+            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
-            if year >= int(pla) and year < int(pla) + 10:
-                if not checkIfPlaylistExists(sp, str(pla)):
-                    sp.user_playlist_create(user=user_id, name=pla, public=False)
-
-                playlist_id = get_playlist_id_by_name(sp, str(pla))
-
-                if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                    sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
-                break 
-
-        if year < 1940:
-            if not checkIfPlaylistExists(sp, "older"):
-                sp.user_playlist_create(user=user_id, name="older", public=False)
-
-            playlist_id = get_playlist_id_by_name(sp, "older")
-
-            if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
 
 
