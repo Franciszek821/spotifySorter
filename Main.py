@@ -111,6 +111,7 @@ def sort(sp, user_id):
                 playlist_id = get_playlist_id_by_name(sp, pla)
                 if not playlist_id:
                     sp.user_playlist_create(user=user_id, name=pla, public=False)
+                    print(f"Created playlist {pla}")
                     playlist_id = get_playlist_id_by_name(sp, pla)
 
 
