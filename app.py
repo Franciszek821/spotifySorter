@@ -5,12 +5,15 @@ import os
 from Main import sort
 from dotenv import load_dotenv
 
+
+load_dotenv()
+
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
-load_dotenv()
+
 
 
 
