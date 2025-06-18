@@ -98,7 +98,7 @@ def sort(sp, user_id):
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
 
-    for i in liked_tracks[:100]:
+    for i in liked_tracks[:1]:
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
@@ -115,6 +115,7 @@ def sort(sp, user_id):
 
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                     sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+                    return f"Added {track['name']} to playlist {pla}"
                 break 
 
         if year < 1940:
