@@ -73,5 +73,9 @@ def token_required(f):
     return decorated
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     port = int(os.environ.get("PORT", 5000))  # default 5000 locally
     app.run(host="0.0.0.0", port=port, debug=True)
+=======
+    app.run(debug=True)
+>>>>>>> 5c2e91b1a3682dbc6882b3cd97b50e3333a2f84a
