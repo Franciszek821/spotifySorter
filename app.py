@@ -53,6 +53,7 @@ def index():
 
 
         elif action == 'authorization':
+            print("Authorization button clicked")
             return redirect(url_for('login'))  # Starts login flow
 
     return render_template("index.html", message=message)
