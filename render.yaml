@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: spotify-sorter
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: SPOTIPY_CLIENT_ID
+        sync: false
+      - key: SPOTIPY_CLIENT_SECRET
+        sync: false
+      - key: SPOTIPY_REDIRECT_URI
+        sync: false
+      - key: FLASK_SECRET_KEY
+        sync: false
