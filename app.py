@@ -14,6 +14,23 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 
 
+def get_token():
+    sp_oauth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+        scope="playlist-modify-public playlist-modify-private user-library-read"
+    )
+
+    token_info = session.get("token_info", None)
+    if not token_info:
+        raise Exception("No token info in session")
+
+    if sp_oauth.is_token_expired(token_info):
+        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+
+    session["token_info"] = token_info
+    return token_info
 
 
 
@@ -28,9 +45,10 @@ def index():
             if not token_info:
                 return redirect(url_for('login'))
 
+            token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
-            message = sort(sp, user_id)
+            sort(sp, user_id)
             #message = sp.current_user_saved_tracks(limit=1, offset=0)
 
 
@@ -45,30 +63,7 @@ def login():
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-        scope = (
-            "ugc-image-upload "
-            "user-read-recently-played "
-            "user-top-read "
-            "user-read-playback-position "
-            "user-read-playback-state "
-            "user-modify-playback-state "
-            "user-read-currently-playing "
-            "app-remote-control "
-            "streaming "
-            "playlist-modify-public "
-            "playlist-modify-private "
-            "playlist-read-private "
-            "playlist-read-collaborative "
-            "user-follow-modify "
-            "user-follow-read "
-            "user-library-save "
-            "user-library-read "
-            "user-read-email "
-            "user-read-private "
-            "user-read-birthdate "
-            "user-library-modify"
-        )
-
+        scope="playlist-modify-public playlist-modify-private user-library-read"
     )
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
@@ -85,7 +80,7 @@ def callback():
     )
 
     code = request.args.get('code')
-    token_info = sp_oauth.get_access_token(code)
+    token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
     return redirect(url_for('index'))
 

@@ -98,7 +98,7 @@ def sort(sp, user_id):
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
 
-    for i in liked_tracks[:1]:
+    for i in liked_tracks[:10]: # Limit to first 10 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
