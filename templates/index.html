@@ -1,44 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spotify Sorter</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Spotify Sorter</title>
 </head>
 <body>
-  <div class="container">
-    <form method="POST">
-      <div class="button-group">
-        <button type="submit" name="action" value="authorization">Authorization</button>
-        <button type="submit" name="action" value="sort">Sort</button>
-      </div>
-
-      <div class="input-group">
-        <label for="sortSelect">Sort By:</label>
-        <select name="sortSelect" id="sortSelect" onchange="toggleInput(this.value)">
-          <option value="number">Number</option>
-          <option value="all">All</option>
-        </select>
-        <input type="number" name="numberInput" id="numberInput" placeholder="Enter a number" />
-      </div>
-    </form>
-
+    <h1>Spotify Playlist Sorter</h1>
     {% if message %}
-      <p><strong>Message:</strong> {{ message }}</p>
+        <p>{{ message }}</p>
     {% endif %}
-
-    <script>
-      function toggleInput(value) {
-        const input = document.getElementById("numberInput");
-        input.style.display = value === "number" ? "block" : "none";
-      }
-
-      // Initialize input visibility on load
-      window.onload = function () {
-        toggleInput(document.getElementById("sortSelect").value);
-      };
-    </script>
-  </div>
+    <form method="post">
+        <button type="submit" name="action" value="authorization">authorization</button>
+        <button type="submit" name="action" value="sort">Sort Playlists</button>
+    </form>
 </body>
 </html>

@@ -40,10 +40,6 @@ def index():
     message = None
     if request.method == "POST":
         action = request.form.get('action')
-
-        sort_mode = request.form.get("sortSelect")
-        number_value = request.form.get("numberInput")
-
         if action == 'sort':
             token_info = session.get("token_info", None)
             if not token_info:
@@ -52,12 +48,15 @@ def index():
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
-            sort(sp, user_id, number_value)
+            sort(sp, user_id)
+            #message = sp.current_user_saved_tracks(limit=1, offset=0)
+
 
         elif action == 'authorization':
             print("Authorization button clicked")
-            return redirect(url_for('login'))
+            return redirect(url_for('login'))  # Starts login flow
 
+    return render_template("index.html", message=message)
 
 @app.route('/login')
 def login():
