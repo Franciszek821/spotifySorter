@@ -44,13 +44,6 @@ def get_playlist_id_by_name(sp, playlist_name):
 
 
 
-#for pla in playlists:
-#    pl_id = get_playlist_id_by_name(sp, pla)
-#    if pl_id:
-#        sp.current_user_unfollow_playlist(pl_id)
-
-
-
 def checkIfPlaylistExists(sp, playlist_name):
     playlists = []
     limit = 50
@@ -135,11 +128,23 @@ def sort(sp, user_id):
                 sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
 def clear_playlists(sp):
-    playlists = sp.current_user_playlists(limit=50)['items']
-    for pl in playlists:
-        if pl['description'] == "Made by Spotify Sorter":
-            sp.current_user_unfollow_playlist(pl['id'])
+    limit = 50
+    offset = 0
+    while True:
+        playlists = sp.current_user_playlists(limit=50)['items']
+        for pla in playlists:
+            if pla['description'] == "Made by Spotify Sorter":
+                sp.current_user_unfollow_playlist(pla['id'])
+        if playlists['next']:
+            offset += limit
+        else:
+            break
 
+def testing(sp):
+    url = "https://open.spotify.com/artist/0PFtn5NtBbbUNbU9EAmIWF"
+    related_artists = sp.artist_related_artists(url)
+    print(related_artists)
+    return related_artists
 
 
 
@@ -153,14 +158,14 @@ def clear_playlists(sp):
 
 
 #TODO:
-# 2. Add a button to sort liked songs by year
-# 3. Add a button to clear all playlists
-# 4. Add a button to sort liked songs by tags
-# 5. Add a button to sort liked songs by genre
-# 6. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
-# 7. Add a button 
+# 1. Add a button to create a playlist with top 20 liked songs
+# 2. Add a button to sort liked songs by genre
+# 3. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
+# 4. Add a button 
 
 
-
-# Prototype for desktop app
-# 2 buttons one that sorts liked songs and one that authrizes the user
+#artist_related_artists(artist_id)
+#artist_top_tracks(artist_id, country='US')
+#current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
+#recommendation_genre_seeds()
+#user(user)
