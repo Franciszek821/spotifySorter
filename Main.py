@@ -8,6 +8,7 @@ import os
 
 
 
+
 def get_all_liked_tracks(sp):
     all_tracks = []
     offset = 0
@@ -31,9 +32,9 @@ def get_playlist_id_by_name(sp, playlist_name):
 
     while True:
         playlists = sp.current_user_playlists(limit=limit, offset=offset)
-        for playlist in playlists['items']:
-            if playlist['name'].lower() == playlist_name.lower():
-                return playlist['id']
+        for pla in playlists['items']:
+            if pla['name'].lower() == playlist_name.lower():
+                return pla['id']
         if playlists['next']:
             offset += limit
         else:
@@ -97,6 +98,7 @@ def sort(sp, user_id):
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
+    print([p['name'] for p in sp.current_user_playlists(limit=50)['items']])
 
     for i in liked_tracks[:1]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
@@ -109,15 +111,18 @@ def sort(sp, user_id):
 
             if year >= int(pla) and year < int(pla) + 10:
                 playlist_id = get_playlist_id_by_name(sp, pla)
+                print(f"Playlist ID for {pla}: {playlist_id}")
                 if not playlist_id:
-                    sp.user_playlist_create(user=user_id, name=pla, public=False)
-                    print(f"iuSAHDIUAHIUDH")
-                    playlist_id = get_playlist_id_by_name(sp, pla)
+                    chuj = sp.user_playlist_create(user=user_id, name=pla, public=False)
+
+                    playlist_id = chuj['id']
+                    print(f"Playlist created: {playlist_id}")
 
 
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                     sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
-                    print(f"chuj")
+                    #print(f"chuj")
+
                 break 
 
         if year < 1940:
@@ -148,3 +153,8 @@ def sort(sp, user_id):
 # 4. Add a button to sort liked songs by tags
 # 5. Add a button to sort liked songs by genre
 # 6. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
+
+
+
+# Prototype for desktop app
+# 2 buttons one that sorts liked songs and one that authrizes the user

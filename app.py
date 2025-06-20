@@ -19,7 +19,7 @@ def get_token():
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-        scope="playlist-modify-public playlist-modify-private user-library-read"
+        scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative"
     )
 
     token_info = session.get("token_info", None)
@@ -64,7 +64,7 @@ def login():
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-        scope="playlist-modify-public playlist-modify-private user-library-read"
+        scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative"
     )
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
@@ -77,7 +77,7 @@ def callback():
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-        scope="playlist-modify-public playlist-modify-private user-library-read"
+        scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative"
     )
 
     code = request.args.get('code')
