@@ -92,7 +92,7 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
     return False
 
 
-def sort(sp, user_id):
+def sort(sp, user_id, numberOfSongs):
 
     playlists = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
     playlist_id = None
@@ -100,7 +100,7 @@ def sort(sp, user_id):
     liked_tracks = get_all_liked_tracks(sp)
     print([p['name'] for p in sp.current_user_playlists(limit=50)['items']])
 
-    for i in liked_tracks[:1]: # Limit to first 1 tracks for testing
+    for i in liked_tracks[:numberOfSongs]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
