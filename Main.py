@@ -100,7 +100,7 @@ def sort(sp, user_id):
     liked_tracks = get_all_liked_tracks(sp)
     print([p['name'] for p in sp.current_user_playlists(limit=50)['items']])
 
-    for i in liked_tracks[:3]: # Limit to first 1 tracks for testing
+    for i in liked_tracks[:5]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
