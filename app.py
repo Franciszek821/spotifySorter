@@ -50,11 +50,9 @@ def index():
             user_id = sp.current_user()['id']
             sort(sp, user_id)
             #message = sp.current_user_saved_tracks(limit=1, offset=0)
+            message = "Your liked songs have been sorted and added to the 'Sorted Liked Songs' playlist."
 
-
-        elif action == 'authorization':
-            print("Authorization button clicked")
-            return redirect(url_for('login'))  # Starts login flow
+        
 
     return render_template("index.html", message=message)
 
