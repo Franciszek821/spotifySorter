@@ -140,13 +140,15 @@ def clear_playlists(sp):
         else:
             break
 
-def testing(sp):
-    url = "https://open.spotify.com/artist/0PFtn5NtBbbUNbU9EAmIWF"
-    id = "0PFtn5NtBbbUNbU9EAmIWF"
-    related_artists = sp.artist_related_artists(id)
-    print(related_artists)
-    return related_artists
+def top25_creator(sp):
+    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
+    for song in topSongs['items']:
+        if not checkIfPlaylistExists(sp, "Top25"):
+            sp.user_playlist_create(user=sp.current_user()['id'], name="Top25", public=False, description="Made by Spotify Sorter")
 
+        playlist_id = get_playlist_id_by_name(sp, "Top25")
+        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
 
 

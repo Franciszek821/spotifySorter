@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-from Main import sort, clear_playlists, testing
+from Main import sort, clear_playlists, top25_creator
 from dotenv import load_dotenv
 
 
@@ -59,13 +59,14 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'])
             clear_playlists(sp)
             message = "All playlists have been cleared."
-        elif action == 'test':
+        elif action == 'top25_creator':
             token_info = session.get("token_info", None)
             if not token_info:
                 return redirect(url_for('login'))
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'])
-            message = testing(sp)
+            top25_creator(sp)
+            message = "Top 25 playlists have been created."
             
             
 
