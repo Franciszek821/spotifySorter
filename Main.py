@@ -7,7 +7,7 @@ import os
 
 
 
-
+playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
 
 def get_all_liked_tracks(sp):
     all_tracks = []
@@ -94,7 +94,7 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
 
 def sort(sp, user_id):
 
-    playlists = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
+    
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
@@ -105,7 +105,7 @@ def sort(sp, user_id):
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
 
-        for pla in playlists:
+        for pla in playlistsLIST:
             if pla == "older":
                 continue
 
@@ -113,9 +113,9 @@ def sort(sp, user_id):
                 playlist_id = get_playlist_id_by_name(sp, pla)
                 print(f"Playlist ID for {pla}: {playlist_id}")
                 if not playlist_id:
-                    chuj = sp.user_playlist_create(user=user_id, name=pla, public=False)
+                    play = sp.user_playlist_create(user=user_id, name=pla, public=False, description="Made by Spotify Sorter")
 
-                    playlist_id = chuj['id']
+                    playlist_id = play['id']
                     print(f"Playlist created: {playlist_id}")
 
 
@@ -134,6 +134,11 @@ def sort(sp, user_id):
             if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                 sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
+def clear_playlists(sp):
+    playlists = sp.current_user_playlists(limit=50)['items']
+    for pl in playlists:
+        if pl['description'] == "Made by Spotify Sorter":
+            sp.current_user_unfollow_playlist(pl['id'])
 
 
 
@@ -147,12 +152,13 @@ def sort(sp, user_id):
 
 
 
-#TODO: # 1. Make it a desktop app with user interface
+#TODO:
 # 2. Add a button to sort liked songs by year
 # 3. Add a button to clear all playlists
 # 4. Add a button to sort liked songs by tags
 # 5. Add a button to sort liked songs by genre
 # 6. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
+# 7. Add a button 
 
 
 
