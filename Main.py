@@ -142,7 +142,8 @@ def clear_playlists(sp):
 
 def testing(sp):
     url = "https://open.spotify.com/artist/0PFtn5NtBbbUNbU9EAmIWF"
-    related_artists = sp.artist_related_artists(url)
+    id = "0PFtn5NtBbbUNbU9EAmIWF"
+    related_artists = sp.artist_related_artists(id)
     print(related_artists)
     return related_artists
 
