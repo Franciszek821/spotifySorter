@@ -50,7 +50,7 @@ def index():
             user_id = sp.current_user()['id']
             sort(sp, user_id)
             #message = sp.current_user_saved_tracks(limit=1, offset=0)
-            message = "Your liked songs have been sorted and added to the 'Sorted Liked Songs' playlist."
+            message = "Your liked songs have been sorted and added to the playlists."
 
         
 
