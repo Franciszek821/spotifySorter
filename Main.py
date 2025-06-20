@@ -98,7 +98,7 @@ def sort(sp, user_id):
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp)
 
-    for i in liked_tracks[:10]: # Limit to first 1 tracks for testing
+    for i in liked_tracks[:1]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
@@ -142,9 +142,9 @@ def sort(sp, user_id):
 
 
 
-#TODO:
-# 1. Add a button to sort liked songs by year
-# 2. Add a button to clear all playlists
-# 3. Add a button to sort liked songs by tags
-# 4. Add a button to sort liked songs by genre
-# 5. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
+#TODO: # 1. Make it a desktop app with user interface
+# 2. Add a button to sort liked songs by year
+# 3. Add a button to clear all playlists
+# 4. Add a button to sort liked songs by tags
+# 5. Add a button to sort liked songs by genre
+# 6. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
