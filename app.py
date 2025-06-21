@@ -60,13 +60,18 @@ def index():
             clear_playlists(sp)
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
+            selected_time = request.form.get('time')
+            print("Selected time:", selected_time)  # Debug
+
             token_info = session.get("token_info", None)
             if not token_info:
                 return redirect(url_for('login'))
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'])
-            top20_songs(sp)
-            message = "Top 20 songs playlist have been created."
+
+            top20_songs(sp, selected_time)
+            message = "Top 20 songs playlist has been created."
+
             
             
 

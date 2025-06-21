@@ -2,16 +2,58 @@
 <html>
 <head>
     <title>Spotify Sorter</title>
+    <script>
+        function revealChoices() {
+            document.getElementById("choices").style.display = "block";
+        }
+        function hideChoices() {
+            document.getElementById("choices").style.display = "none";
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("reveal") === "true") {
+                revealChoices();
+            }
+        }
+    </script>
+    <style>
+        #choices {
+            display: none; /* Hide by default */
+            margin-top: 1em;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Spotify Playlist Sorter</h1>
+
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}
-    <form method="post">
+
+    <!-- Modify form to call JS before submitting -->
+    <form id="mainForm" method="post">
         <button type="submit" name="action" value="sort">Sort Playlists</button>
         <button type="submit" name="action" value="clear">Deletes made playlists</button>
-        <button type="submit" name="action" value="top20_songs">top20_songs</button>
+        <button type="button" onclick="revealChoices()">Top 20 Songs</button>
+    
+
+        <div id="choices">
+            <details open>
+                <summary>Select the time of the top 20 songs</summary>
+                <form>
+                    <label><input type="radio" name="time" value="short_term">short term (4 weeks)</label>
+                    <label><input type="radio" name="time" value="medium_term">medium term (6 months)</label>
+                    <label><input type="radio" name="time" value="long_term">all time</label>
+
+                </form>
+            </details>
+            <button type="submit" name="action" value="top20_songs">confirm</button>
+            <button type="button" onclick="hideChoices()">cancel</button>
+        </div>
     </form>
+
+    
 </body>
 </html>

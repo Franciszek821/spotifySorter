@@ -144,8 +144,8 @@ def clear_playlists(sp):
             break
 
 
-def top20_songs(sp):
-    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='long_term')
+def top20_songs(sp, selected_time):
+    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range=selected_time)
     for song in topSongs['items']:
         #print("Adding song to Top20 playlist:", song['name'])
         if not checkIfPlaylistExists(sp, "Top20"):
