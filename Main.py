@@ -145,7 +145,7 @@ def clear_playlists(sp):
 
 
 def top20_songs(sp):
-    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
+    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='long_term')
     for song in topSongs['items']:
         #print("Adding song to Top20 playlist:", song['name'])
         if not checkIfPlaylistExists(sp, "Top20"):
@@ -167,6 +167,12 @@ def top20_songs(sp):
 
 #TODO:
 # 1. Add a button to create a playlist with top 20 liked songs
+# it works
+# make it so you have a choice to choice either short term, medium term or long term
+# short term = 4 weeks, medium term = 6 months, long term = all time
+
+
+
 # 2. Add a button to sort liked songs by genre
 # 3. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
 # 4. Add a button 
