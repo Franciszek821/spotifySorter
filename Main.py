@@ -131,24 +131,38 @@ def clear_playlists(sp):
     limit = 50
     offset = 0
     while True:
-        playlists = sp.current_user_playlists(limit=50)['items']
+        playlists_response = sp.current_user_playlists(limit=limit, offset=offset)
+        playlists = playlists_response['items']
+        
         for pla in playlists:
-            if pla['description'] == "Made by Spotify Sorter":
+            if pla.get('description') == "Made by Spotify Sorter":
                 sp.current_user_unfollow_playlist(pla['id'])
-        if playlists['next']:
+        
+        if playlists_response.get('next'):
             offset += limit
         else:
             break
 
+
 def top20_songs(sp):
     topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
-    for song in topSongs['items']:
-        if not checkIfPlaylistExists(sp, "Top20"):
-            sp.user_playlist_create(user=sp.current_user()['id'], name="Top20", public=False, description="Made by Spotify Sorter")
+    
+    if not checkIfPlaylistExists(sp, "Top20"):
+        sp.user_playlist_create(
+            user=sp.current_user()['id'],
+            name="Top20",
+            public=False,
+            description="Made by Spotify Sorter"
+        )
 
-        playlist_id = get_playlist_id_by_name(sp, "Top20")
-        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+    playlist_id = get_playlist_id_by_name(sp, "Top20")
+    if not playlist_id:
+        return  # Failsafe
+
+    for song in topSongs['items']:
+        if not checkIfSongInPlaylist(sp, song['id'], playlist_id):
             sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+
 
 
 
