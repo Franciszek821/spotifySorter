@@ -15,6 +15,13 @@
         function hideNumberSort() {
             document.getElementById("numberSort").style.display = "none";
         }
+        function revealButtons() {
+            document.getElementById("buttons").style.display = "block";
+        }
+        function hideButtons() {
+            document.getElementById("buttons").style.display = "none";
+        }
+
 
 
         window.onload = function() {
@@ -22,6 +29,7 @@
             if (urlParams.get("reveal") === "true") {
                 revealChoices();
                 revealNumberSort();
+                hideButtons();
             }
         }
     </script>
@@ -32,6 +40,10 @@
         }
         #numberSort {
             display: none; /* Hide by default */
+            margin-top: 1em;
+        }
+        #buttons {
+            display: block; /* Show by default */
             margin-top: 1em;
         }
     </style>
@@ -46,30 +58,26 @@
 
     <!-- Modify form to call JS before submitting -->
     <form id="mainForm" method="post">
-        <!-- <button type="submit" name="action" value="sort">Sort Playlists</button> -->
-        <button type="button" onclick="revealNumberSort()">Sort Playlists</button>
-        <button type="submit" name="action" value="clear">Deletes made playlists</button>
-        <button type="button" onclick="revealChoices()">Top 20 Songs</button>
-    
+        <div id="buttons">
+            <button type="button" onclick="revealNumberSort(); hideButtons();">Sort Playlists</button>
+            <button type="submit" name="action" value="clear">Deletes made playlists</button>
+            <button type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
+        </div>
 
         <div id="choices">
-            <details open>
-                <summary>Select the time of the top 20 songs</summary>
-                <form>
-                    <label><input type="radio" name="time" value="short_term">short term (4 weeks)</label>
-                    <label><input type="radio" name="time" value="medium_term">medium term (6 months)</label>
-                    <label><input type="radio" name="time" value="long_term">all time</label>
+            <summary>Select the time of the top 20 songs</summary>
+            <label><input type="radio" name="time" value="short_term">short term (4 weeks)</label>
+            <label><input type="radio" name="time" value="medium_term">medium term (6 months)</label>
+            <label><input type="radio" name="time" value="long_term">all time</label><br>
 
-                </form>
-            </details>
             <button type="submit" name="action" value="top20_songs">confirm</button>
-            <button type="button" onclick="hideChoices()">cancel</button>
+            <button type="button" onclick="hideChoices(); revealButtons();">cancel</button>
         </div>
 
         <div id="numberSort">
-            <label><input type="number" name="numSort" value="numberSort" min="1"> the amount of songs to sort </label>
+            <label> The amount of songs to sort: <input type="number" name="numSort" value="numberSort" min="1"></label>
             <button type="submit" name="action" value="sort"> Confirm Sort </button>
-            <button type="button" onclick="hideNumberSort()"> Cancel </button>
+            <button type="button" onclick="hideNumberSort(); revealButtons();"> Cancel </button>
         </div>
     </form>
 

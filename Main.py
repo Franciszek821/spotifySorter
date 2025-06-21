@@ -171,10 +171,7 @@ def top20_songs(sp, selected_time):
 
 
 #TODO:
-# 1. Add a button to create a playlist with top 20 liked songs
-# it works
-# make it so you have a choice to choice either short term, medium term or long term
-# short term = 4 weeks, medium term = 6 months, long term = all time
+
 
 
 
