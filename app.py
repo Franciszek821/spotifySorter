@@ -41,6 +41,7 @@ def index():
     if request.method == "POST":
         action = request.form.get('action')
         if action == 'sort':
+            selected_Songs = request.form.get('selected_songs')
             token_info = session.get("token_info", None)
             if not token_info:
                 return redirect(url_for('login'))
@@ -48,8 +49,7 @@ def index():
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'])
             user_id = sp.current_user()['id']
-            sort(sp, user_id)
-            #message = sp.current_user_saved_tracks(limit=1, offset=0)
+            sort(sp, user_id, int(selected_Songs))
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
             token_info = session.get("token_info", None)

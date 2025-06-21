@@ -9,16 +9,28 @@
         function hideChoices() {
             document.getElementById("choices").style.display = "none";
         }
+        function revealNumberSort() {
+            document.getElementById("numberSort").style.display = "block";
+        }
+        function hideNumberSort() {
+            document.getElementById("numberSort").style.display = "none";
+        }
+
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get("reveal") === "true") {
                 revealChoices();
+                revealNumberSort();
             }
         }
     </script>
     <style>
         #choices {
+            display: none; /* Hide by default */
+            margin-top: 1em;
+        }
+        #numberSort {
             display: none; /* Hide by default */
             margin-top: 1em;
         }
@@ -34,7 +46,8 @@
 
     <!-- Modify form to call JS before submitting -->
     <form id="mainForm" method="post">
-        <button type="submit" name="action" value="sort">Sort Playlists</button>
+        <!-- <button type="submit" name="action" value="sort">Sort Playlists</button> -->
+        <button type="button" onclick="revealNumberSort()">Sort Playlists</button>
         <button type="submit" name="action" value="clear">Deletes made playlists</button>
         <button type="button" onclick="revealChoices()">Top 20 Songs</button>
     
@@ -51,6 +64,12 @@
             </details>
             <button type="submit" name="action" value="top20_songs">confirm</button>
             <button type="button" onclick="hideChoices()">cancel</button>
+        </div>
+
+        <div id="numberSort">
+            <label><input type="number" name="numSort" value="numberSort" min="1"> the amount of songs to sort </label>
+            <button type="submit" name="action" value="sort"> Confirm Sort </button>
+            <button type="button" onclick="hideNumberSort()"> Cancel </button>
         </div>
     </form>
 

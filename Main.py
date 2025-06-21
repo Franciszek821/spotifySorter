@@ -9,18 +9,23 @@ import os
 
 playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
 
-def get_all_liked_tracks(sp):
+def get_all_liked_tracks(sp, total_to_get):
     all_tracks = []
     offset = 0
     limit = 50
 
-    while True:
-        results = sp.current_user_saved_tracks(limit=limit, offset=offset)
+    while len(all_tracks) < total_to_get:
+        remaining = total_to_get - len(all_tracks)
+        current_limit = min(limit, remaining)
+
+        results = sp.current_user_saved_tracks(limit=current_limit, offset=offset)
         items = results['items']
+
         if not items:
             break
+
         all_tracks.extend(items)
-        offset += limit
+        offset += current_limit
 
     return all_tracks
 
@@ -85,15 +90,15 @@ def checkIfSongInPlaylist(sp, song_id, pl_id):
     return False
 
 
-def sort(sp, user_id):
+def sort(sp, user_id, total_to_get):
 
     
     playlist_id = None
     # Fetch all liked songs
-    liked_tracks = get_all_liked_tracks(sp)
+    liked_tracks = get_all_liked_tracks(sp, total_to_get)
     print([p['name'] for p in sp.current_user_playlists(limit=50)['items']])
 
-    for i in liked_tracks[:5]: # Limit to first 1 tracks for testing
+    for i in liked_tracks[:total_to_get]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
@@ -148,10 +153,10 @@ def top20_songs(sp, selected_time):
     topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range=selected_time)
     for song in topSongs['items']:
         #print("Adding song to Top20 playlist:", song['name'])
-        if not checkIfPlaylistExists(sp, "Top20"):
-            sp.user_playlist_create(user=sp.current_user()['id'], name="Top20", public=False, description="Made by Spotify Sorter")
+        if not checkIfPlaylistExists(sp, "Top20" + str(selected_time)):
+            sp.user_playlist_create(user=sp.current_user()['id'], name="Top20" + str(selected_time), public=False, description="Made by Spotify Sorter")
 
-        playlist_id = get_playlist_id_by_name(sp, "Top20")
+        playlist_id = get_playlist_id_by_name(sp, "Top20" + str(selected_time))
         if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
             sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
