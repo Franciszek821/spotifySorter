@@ -47,7 +47,7 @@ def index():
                 return redirect(url_for('login'))
 
             token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'])
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             user_id = sp.current_user()['id']
             sort(sp, user_id, int(selected_Songs))
             message = "Your liked songs have been sorted and added to the playlists."
@@ -56,7 +56,7 @@ def index():
             if not token_info:
                 return redirect(url_for('login'))
             token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'])
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             clear_playlists(sp)
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
@@ -67,7 +67,7 @@ def index():
             if not token_info:
                 return redirect(url_for('login'))
             token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'])
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
 
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
