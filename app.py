@@ -41,7 +41,7 @@ def index():
     if request.method == "POST":
         action = request.form.get('action')
         if action == 'sort':
-            selected_Songs = request.form.get('selected_songs')
+            selected_Songs = request.form.get('numberSort')
             token_info = session.get("token_info", None)
             if not token_info:
                 return redirect(url_for('login'))
