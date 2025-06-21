@@ -146,23 +146,14 @@ def clear_playlists(sp):
 
 def top20_songs(sp):
     topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
-    
-    if not checkIfPlaylistExists(sp, "Top20"):
-        sp.user_playlist_create(
-            user=sp.current_user()['id'],
-            name="Top20",
-            public=False,
-            description="Made by Spotify Sorter"
-        )
-
-    playlist_id = get_playlist_id_by_name(sp, "Top20")
-    if not playlist_id:
-        return  # Failsafe
-
     for song in topSongs['items']:
-        if not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
-
+        print("Adding song to Top20 playlist:", song['name'])
+        #if not checkIfPlaylistExists(sp, "Top20"):
+        #    sp.user_playlist_create(user=sp.current_user()['id'], name="Top20", public=False, description="Made by Spotify Sorter")
+#
+        #playlist_id = get_playlist_id_by_name(sp, "Top20")
+        #if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+        #    sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
 
 
