@@ -140,7 +140,7 @@ def clear_playlists(sp):
         else:
             break
 
-def top20_creator(sp):
+def top20_songs(sp):
     topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
     for song in topSongs['items']:
         if not checkIfPlaylistExists(sp, "Top20"):
