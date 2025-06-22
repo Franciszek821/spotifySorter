@@ -1,30 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
-import os
-import random
-
-
-GENRE_SEEDS = [
-    "acoustic", "afrobeat", "alternative", "ambient", "anime",
-    "black-metal", "bluegrass", "blues", "brazil", "breakbeat",
-    "british", "cantopop", "chicago-house", "children", "chill", "classical",
-    "club", "comedy", "country", "dance", "dancehall", "death-metal",
-    "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub",
-    "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro",
-    "french", "funk", "garage", "german", "gospel", "goth", "grindcore",
-    "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore",
-    "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk",
-    "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-pop",
-    "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal",
-    "minimal-techno", "movies", "new-age", "opera", "pagode", "party", "piano",
-    "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house",
-    "psych-rock", "punk", "punk-rock", "r-n-b", "reggae", "reggaeton",
-    "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad",
-    "salsa", "samba", "sertanejo", "show-tunes", "ska", "sleep", "songwriter",
-    "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop",
-    "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"
-]
 
 
 
@@ -227,7 +203,7 @@ def artistTop(sp, selected_artist):
 
 #categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
 
-def testing(sp):
+def topArtistsSongs(sp):
 
     artist = sp.current_user_top_artists(limit=5, offset=0, time_range='medium_term')
     playlist_name = f"topArtistsSongs"
@@ -249,44 +225,15 @@ def testing(sp):
             if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
                 sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
-
-
-
-
-def create_random_genre_playlist(sp):
-    valid_genres = sp.recommendation_genre_seeds().get("genres", [])
-    random.shuffle(valid_genres)  # Shuffle for randomness
+#49PyCCLOdJi0jHkGyyY2vv the best song ever made
+def testing(sp, track_id):
     
-    for genre in valid_genres:
-        try:
-            recommendations = sp.recommendations(seed_genres=[genre], limit=25)
-            if not recommendations or not recommendations.get("tracks"):
-                continue  # Skip if no tracks returned
+    features = sp.audio_features([track_id])
+    print(features[0])
 
-            playlist_name = f"Random {genre.capitalize()} Playlist"
-            user_id = sp.current_user()["id"]
 
-            if not checkIfPlaylistExists(sp, playlist_name):
-                sp.user_playlist_create(
-                    user=user_id,
-                    name=playlist_name,
-                    public=False,
-                    description="Made by Spotify Sorter"
-                )
 
-            playlist_id = get_playlist_id_by_name(sp, playlist_name)
 
-            for track in recommendations["tracks"]:
-                track_uri = track["uri"]
-                if playlist_id and not checkIfSongInPlaylist(sp, track["id"], playlist_id):
-                    sp.playlist_add_items(playlist_id, [track_uri])
-
-            return f"✅ Created playlist with 25 '{genre}' tracks!"
-
-        except Exception as e:
-            continue  # Try next genre if this one fails
-
-    return "❌ Failed to create playlist with any available genre."
 
 
 
