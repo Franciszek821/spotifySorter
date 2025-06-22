@@ -196,7 +196,8 @@ def artistTop(sp, selected_artist):
     return f"Top 10 songs playlist for '{selected_artist}' has been created."
 
 def testing(sp):
-    return sp.categories(limit=50, offset=0)
+    return sp.recommendation_genre_seeds()
+    #sp.recommendations(seed_artists=None, seed_genres=None, seed_tracks=None, limit=20, country=None, **kwargs)
 
 
 
@@ -210,7 +211,7 @@ def testing(sp):
 #TODO:
 # make a loading wheel when sorting
 
-
+#current_user_top_artists(limit=20, offset=0, time_range='medium_term') this and top 10 from 5 artists
 
 # 2. Add a button to sort liked songs by genre
 # 3. Add a button that makes a daily playlist with liked songs sorted by genre (25 songs)
