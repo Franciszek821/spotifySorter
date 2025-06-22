@@ -6,15 +6,15 @@ import random
 
 
 GENRE_SEEDS = [
-    "acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime",
-    "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat",
+    "acoustic", "afrobeat", "alternative", "ambient", "anime",
+    "black-metal", "bluegrass", "blues", "brazil", "breakbeat",
     "british", "cantopop", "chicago-house", "children", "chill", "classical",
     "club", "comedy", "country", "dance", "dancehall", "death-metal",
     "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub",
     "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro",
     "french", "funk", "garage", "german", "gospel", "goth", "grindcore",
     "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore",
-    "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house",
+    "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk",
     "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-pop",
     "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal",
     "minimal-techno", "movies", "new-age", "opera", "pagode", "party", "piano",
@@ -157,7 +157,7 @@ def sort(sp, total_to_get):
 
         if year < 1940:
             if not checkIfPlaylistExists(sp, "older"):
-                sp.user_playlist_create(user=user_id, name="older", public=False)
+                sp.user_playlist_create(user=sp.current_user()['id'], name="older", public=False, description="Made by Spotify Sorter")
 
             playlist_id = get_playlist_id_by_name(sp, "older")
 
@@ -252,29 +252,42 @@ def testing(sp):
 
 
 
+
 def create_random_genre_playlist(sp):
-    genre = random.choice(GENRE_SEEDS)
-    recommendations = sp.recommendations(seed_genres=[genre], limit=25)
+    valid_genres = sp.recommendation_genre_seeds().get("genres", [])
+    random.shuffle(valid_genres)  # Shuffle for randomness
+    
+    for genre in valid_genres:
+        try:
+            recommendations = sp.recommendations(seed_genres=[genre], limit=25)
+            if not recommendations or not recommendations.get("tracks"):
+                continue  # Skip if no tracks returned
 
-    playlist_name = f"Random {genre.capitalize()} Playlist"
-    user_id = sp.current_user()["id"]
+            playlist_name = f"Random {genre.capitalize()} Playlist"
+            user_id = sp.current_user()["id"]
 
-    if not checkIfPlaylistExists(sp, playlist_name):
-        sp.user_playlist_create(
-            user=user_id,
-            name=playlist_name,
-            public=False,
-            description=f"A random playlist based on the '{genre}' genre."
-        )
+            if not checkIfPlaylistExists(sp, playlist_name):
+                sp.user_playlist_create(
+                    user=user_id,
+                    name=playlist_name,
+                    public=False,
+                    description="Made by Spotify Sorter"
+                )
 
-    playlist_id = get_playlist_id_by_name(sp, playlist_name)
+            playlist_id = get_playlist_id_by_name(sp, playlist_name)
 
-    for track in recommendations["tracks"]:
-        track_uri = track["uri"]
-        if playlist_id and not checkIfSongInPlaylist(sp, track["id"], playlist_id):
-            sp.playlist_add_items(playlist_id, [track_uri])
+            for track in recommendations["tracks"]:
+                track_uri = track["uri"]
+                if playlist_id and not checkIfSongInPlaylist(sp, track["id"], playlist_id):
+                    sp.playlist_add_items(playlist_id, [track_uri])
 
-    return f"✅ Created playlist with 25 '{genre}' tracks!"
+            return f"✅ Created playlist with 25 '{genre}' tracks!"
+
+        except Exception as e:
+            continue  # Try next genre if this one fails
+
+    return "❌ Failed to create playlist with any available genre."
+
 
 
 
