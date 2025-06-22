@@ -206,28 +206,30 @@ def artistTop(sp, selected_artist):
 
 #categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
 
-def testing(sp, seed_genres):
+def testing(sp, user_id):
 
-    if isinstance(seed_genres, str):
-        seed_genres = [seed_genres]
-
-    recommendations = sp.recommendations(seed_genres=seed_genres, limit=25)
-    playlist_name = f"Daily Playlist"
+    artist = sp.current_user_top_artists(limit=5, offset=0, time_range='medium_term')
+    playlist_name = f"topArtistsSongs"
     if not checkIfPlaylistExists(sp, playlist_name):
         sp.user_playlist_create(
-            user=sp.current_user()['id'],
+            user=user_id,
             name=playlist_name,
             public=False,
             description="Made by Spotify Sorter"
         )
-
     playlist_id = get_playlist_id_by_name(sp, playlist_name)
-
-    for song in recommendations['tracks']:
-        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
     
-    return f"Daily playlist for '{seed_genres}' has been created."
+    for art in artist['items']:
+        topSongs = sp.artist_top_tracks(art['id'])
+        if 'tracks' not in topSongs or not topSongs['tracks']:
+            continue
+
+        for song in topSongs['tracks']:
+            if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+                sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+
+
+            
     
 
 
