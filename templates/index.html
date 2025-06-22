@@ -64,13 +64,14 @@
 <body>
     <h1>Spotify Playlist Sorter</h1>
 
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
+    
 
     <!-- Modify form to call JS before submitting -->
     <form id="mainForm" method="post">
         <div id="buttons">
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
             <button type="button" onclick="revealNumberSort(); hideButtons();">Sort Playlists</button>
             <button type="submit" name="action" value="clear">Deletes made playlists</button>
             <button type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
