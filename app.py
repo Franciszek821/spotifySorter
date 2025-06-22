@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-from Main import sort, clear_playlists, top20_songs
+from Main import sort, clear_playlists, top20_songs, artistTop
 from dotenv import load_dotenv
 
 
@@ -71,6 +71,15 @@ def index():
 
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
+        elif action == 'artist_top':
+            selected_artist = request.form.get('artist')
+            print("Selected artist:", selected_artist)
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+            message = artistTop(sp, selected_artist)
 
             
             

@@ -48,6 +48,15 @@ def get_playlist_id_by_name(sp, playlist_name):
     return None  # Not found
 
 
+def get_artist_id(sp, artist_name):
+    result = sp.search(q=f'artist:{artist_name}', type='artist', limit=1)
+    items = result['artists']['items']
+    if items:
+        return items[0]['id']  # Spotify artist ID
+    else:
+        return None
+
+
 
 def checkIfPlaylistExists(sp, playlist_name):
     playlists = []
@@ -160,6 +169,21 @@ def top20_songs(sp, selected_time):
         if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
             sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
+def artistTop(sp, selected_artist):
+    artist_id = get_artist_id(sp, selected_artist)
+    if artist_id is None:
+        return f"Artist '{selected_artist}' not found."
+    topSongs = sp.artist_top_tracks(artist_id)
+    for song in topSongs['items']:
+        #print("Adding song to Top10 playlist:", song['name'])
+        if not checkIfPlaylistExists(sp, "Top10" + str(selected_artist)):
+            sp.user_playlist_create(user=sp.current_user()['id'], name="Top10" + str(selected_artist), public=False, description="Made by Spotify Sorter")
+
+        playlist_id = get_playlist_id_by_name(sp, "Top10" + str(selected_artist))
+        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+    return f"Top 10 songs playlist of artist called {selected_artist} has been created."
+
 
 
 
@@ -171,7 +195,7 @@ def top20_songs(sp, selected_time):
 
 
 #TODO:
-
+# make a loading wheel when sorting
 
 
 
@@ -181,7 +205,7 @@ def top20_songs(sp, selected_time):
 
 
 #artist_related_artists(artist_id)
-#artist_top_tracks(artist_id, country='US')
+#artist_top_tracks(artist_id)
 #current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
 #recommendation_genre_seeds()
 #user(user)

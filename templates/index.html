@@ -21,6 +21,13 @@
         function hideButtons() {
             document.getElementById("buttons").style.display = "none";
         }
+        function revealArtist() {
+            document.getElementById("artist").style.display = "block";
+        }
+        function hideArtist() {
+            document.getElementById("artist").style.display = "none";
+        }
+
 
 
 
@@ -29,7 +36,8 @@
             if (urlParams.get("reveal") === "true") {
                 revealChoices();
                 revealNumberSort();
-                hideButtons();
+                hideButtons()
+                revealArtist();
             }
         }
     </script>
@@ -44,6 +52,10 @@
         }
         #buttons {
             display: block; /* Show by default */
+            margin-top: 1em;
+        }
+        #artist {
+            display: none; /* Hide by default */
             margin-top: 1em;
         }
     </style>
@@ -62,6 +74,7 @@
             <button type="button" onclick="revealNumberSort(); hideButtons();">Sort Playlists</button>
             <button type="submit" name="action" value="clear">Deletes made playlists</button>
             <button type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
+            <button type="button" onclick="revealArtist(); hideButtons();">Top 10 Songs from Artist</button>
         </div>
 
         <div id="choices">
@@ -78,6 +91,12 @@
             <label> The amount of songs to sort: <input type="number" name="numSort" value="20" min="1"></label>
             <button type="submit" name="action" value="sort"> Confirm Sort </button>
             <button type="button" onclick="hideNumberSort(); revealButtons();"> Cancel </button>
+        </div>
+
+        <div id="artist">
+            <label> Top 10 songs from artist: <input type="text" name="artist"></label>
+            <button type="submit" name="action" value="top10_artist"> Confirm </button>
+            <button type="button" onclick="hideArtist(); revealButtons();"> Cancel </button>
         </div>
     </form>
 
