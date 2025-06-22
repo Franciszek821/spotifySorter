@@ -195,13 +195,8 @@ def artistTop(sp, selected_artist):
     
     return f"Top 10 songs playlist for '{selected_artist}' has been created."
 
-def similarArtistTop(sp, selected_artist):
-    artist_id = get_artist_id(sp, selected_artist)
-    if artist_id is None:
-        return f"Artist '{selected_artist}' not found."
-    related_artists = sp.artist_related_artists(artist_id)
-    print(related_artists)
-    #test
+def testing(sp):
+    return sp.categories(limit=50, offset=0)
 
 
 
@@ -214,7 +209,7 @@ def similarArtistTop(sp, selected_artist):
 
 #TODO:
 # make a loading wheel when sorting
-# # 1. Add a button to make a top10 from simmilar artist to artist put by user
+
 
 
 # 2. Add a button to sort liked songs by genre
