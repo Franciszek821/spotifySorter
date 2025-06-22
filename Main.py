@@ -50,11 +50,10 @@ def get_playlist_id_by_name(sp, playlist_name):
 
 def get_artist_id(sp, artist_name):
     result = sp.search(q=f'artist:{artist_name}', type='artist', limit=1)
-    items = result['artists']['items']
-    if items:
-        return items[0]['id']  # Spotify artist ID
-    else:
-        return None
+    if result['artists']['items']:
+        return result['artists']['items'][0]['id']
+    return None
+
 
 
 
@@ -173,17 +172,29 @@ def artistTop(sp, selected_artist):
     artist_id = get_artist_id(sp, selected_artist)
     if artist_id is None:
         return f"Artist '{selected_artist}' not found."
+    
     topSongs = sp.artist_top_tracks(artist_id)
-    print("Top songs response:", topSongs)  # Debug this
-    #for song in topSongs['items']:
-    #    #print("Adding song to Top10 playlist:", song['name'])
-    #    if not checkIfPlaylistExists(sp, "Top10" + str(selected_artist)):
-    #        sp.user_playlist_create(user=sp.current_user()['id'], name="Top10" + str(selected_artist), public=False, description="Made by Spotify Sorter")
-#
-    #    playlist_id = get_playlist_id_by_name(sp, "Top10" + str(selected_artist))
-    #    if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-    #        sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
-    #return f"Top 10 songs playlist of artist called {selected_artist} has been created."
+    
+    if 'tracks' not in topSongs or not topSongs['tracks']:
+        return f"No top tracks found for artist '{selected_artist}'."
+    
+    playlist_name = f"Top10 {selected_artist}"
+    if not checkIfPlaylistExists(sp, playlist_name):
+        sp.user_playlist_create(
+            user=sp.current_user()['id'],
+            name=playlist_name,
+            public=False,
+            description="Made by Spotify Sorter"
+        )
+
+    playlist_id = get_playlist_id_by_name(sp, playlist_name)
+
+    for song in topSongs['tracks']:
+        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+    
+    return f"Top 10 songs playlist for '{selected_artist}' has been created."
+
 
 
 
