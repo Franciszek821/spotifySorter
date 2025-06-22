@@ -207,6 +207,10 @@ def artistTop(sp, selected_artist):
 #categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
 
 def testing(sp, seed_genres):
+
+    if isinstance(seed_genres, str):
+        seed_genres = [seed_genres]
+
     recommendations = sp.recommendations(seed_genres=seed_genres, limit=25)
     playlist_name = f"Daily Playlist"
     if not checkIfPlaylistExists(sp, playlist_name):
