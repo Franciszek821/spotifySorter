@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-from Main import sort, clear_playlists, top20_songs, artistTop, testing
+from Main import sort, clear_playlists, top20_songs, artistTop, testing, create_random_genre_playlist
 from dotenv import load_dotenv
 
 
@@ -49,7 +49,7 @@ def index():
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             user_id = sp.current_user()['id']
-            sort(sp, user_id, int(selected_Songs))
+            sort(sp, int(selected_Songs))
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
             token_info = session.get("token_info", None)
@@ -86,8 +86,8 @@ def index():
                 return redirect(url_for('login'))
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            user_id = sp.current_user()['id']
-            print(testing(sp, user_id))
+            #print(testing(sp))
+            message = create_random_genre_playlist(sp)
         
             
 
