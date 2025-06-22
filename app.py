@@ -71,7 +71,7 @@ def index():
 
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
-        elif action == 'artist_top':
+        elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
             print("Selected artist:", selected_artist)
             token_info = session.get("token_info", None)
