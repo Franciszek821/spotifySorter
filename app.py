@@ -69,9 +69,9 @@ def index():
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
 
-            #top20_songs(sp, selected_time)
-            testing(sp, selected_time)
-            #message = "Top 20 songs playlist has been created."
+            top20_songs(sp, selected_time)
+
+            message = "Top 20 songs playlist has been created."
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
             print("Selected artist:", selected_artist)
@@ -80,7 +80,8 @@ def index():
                 return redirect(url_for('login'))
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            message = artistTop(sp, selected_artist)
+            #message = artistTop(sp, selected_artist)
+            testing(sp, selected_artist)            
         elif action == 'test':
             token_info = session.get("token_info", None)
             if not token_info:
