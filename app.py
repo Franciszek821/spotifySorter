@@ -86,7 +86,7 @@ def index():
                 return redirect(url_for('login'))
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            print(testing(sp))
+            print(testing(sp, "pop"))
         
             
 

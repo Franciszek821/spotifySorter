@@ -116,15 +116,18 @@ def sort(sp, user_id, total_to_get):
                 continue
 
             if year >= int(pla) and year < int(pla) + 10:
-                playlist_id = get_playlist_id_by_name(sp, pla)
                 print(f"Playlist ID for {pla}: {playlist_id}")
                 if not playlist_id:
-                    play = sp.user_playlist_create(user=user_id, name=pla, public=False, description="Made by Spotify Sorter")
+                    sp.user_playlist_create(
+                        user=user_id,
+                        name=pla,
+                        public=False,
+                        description="Made by Spotify Sorter"
+                    )
 
-                    playlist_id = play['id']
-                    print(f"Playlist created: {playlist_id}")
+                    
 
-
+                playlist_id = get_playlist_id_by_name(sp, pla)
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
                     sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
                     #print(f"chuj")
@@ -162,7 +165,12 @@ def top20_songs(sp, selected_time):
     for song in topSongs['items']:
         #print("Adding song to Top20 playlist:", song['name'])
         if not checkIfPlaylistExists(sp, "Top20" + str(selected_time)):
-            sp.user_playlist_create(user=sp.current_user()['id'], name="Top20" + str(selected_time), public=False, description="Made by Spotify Sorter")
+            sp.user_playlist_create(
+                user=sp.current_user()['id'],
+                name=f"Top20{selected_time}",
+                public=False,
+                description="Made by Spotify Sorter"
+            )
 
         playlist_id = get_playlist_id_by_name(sp, "Top20" + str(selected_time))
         if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
@@ -195,9 +203,28 @@ def artistTop(sp, selected_artist):
     
     return f"Top 10 songs playlist for '{selected_artist}' has been created."
 
-def testing(sp):
-    return sp.recommendation_genre_seeds()
-    #sp.recommendations(seed_artists=None, seed_genres=None, seed_tracks=None, limit=20, country=None, **kwargs)
+
+#categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
+
+def testing(sp, seed_genres):
+    recommendations = sp.recommendations(seed_genres=seed_genres, limit=25)
+    playlist_name = f"Daily Playlist"
+    if not checkIfPlaylistExists(sp, playlist_name):
+        sp.user_playlist_create(
+            user=sp.current_user()['id'],
+            name=playlist_name,
+            public=False,
+            description="Made by Spotify Sorter"
+        )
+
+    playlist_id = get_playlist_id_by_name(sp, playlist_name)
+
+    for song in recommendations['tracks']:
+        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+    
+    return f"Daily playlist for '{seed_genres}' has been created."
+    
 
 
 
