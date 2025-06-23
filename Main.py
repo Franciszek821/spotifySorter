@@ -225,11 +225,7 @@ def topArtistsSongs(sp):
             if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
                 sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
-#49PyCCLOdJi0jHkGyyY2vv the best song ever made
-def testing(sp, track_id):
-    
-    features = sp.audio_features([track_id])
-    print(features[0])
+
 
 
 
