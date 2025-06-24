@@ -42,10 +42,10 @@ def get_SP():
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
     
-get_SP()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    get_SP()
     message = None
     if request.method == "POST":
         action = request.form.get('action')
