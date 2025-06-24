@@ -34,7 +34,7 @@ def get_token():
 
 sp = None
 
-playlist = []
+playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
 
     
     
@@ -95,9 +95,7 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_time = request.form.get('time')
             topArtistsSongs(sp, selected_time)
-        elif action == 'test':
-            playlists = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
-            return render_template("index.html", message="test", my_list=playlists)
+        
             
 
         
