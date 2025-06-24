@@ -33,52 +33,78 @@ def get_token():
     return token_info
 
 sp = None
-playlists = []
 
-def get_SP():
-    global sp
-    global playlists
-    token_info = session.get("token_info", None)
-    if not token_info:
-        return redirect(url_for('login'))
-    token_info = get_token()
-    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    playlists = get_all_playlists(sp)
+playlist = []
+
     
     
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    get_SP()
+    global playlist
     message = None
     if request.method == "POST":
+        token_info = session.get("token_info", None)
+        if not token_info:
+            return redirect(url_for('login'))
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+
         action = request.form.get('action')
         if action == 'sort':
+
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_Songs = request.form.get('numSort')
-            selected_playlist = request.form.get("selected_option")
-            sort(sp, int(selected_Songs), selected_playlist)
+            #selected_playlist = request.form.get("selected_option")
+            sort(sp, int(selected_Songs))
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             clear_playlists(sp)
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_time = request.form.get('time')
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
         elif action == 'top10_artist':
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_artist = request.form.get('artist')
             message = artistTop(sp, selected_artist)        
         elif action == 'topArtistsSongs':
+            token_info = session.get("token_info", None)
+            if not token_info:
+                return redirect(url_for('login'))
+            token_info = get_token()
+            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_time = request.form.get('time')
             topArtistsSongs(sp, selected_time)
-        
+        elif action == 'test':
+            playlists = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
+            return render_template("index.html", message="test", mylist=playlists)
             
 
         
             
 
         
-    render_template("index.html", my_list=playlists)
+    
     return render_template("index.html", message=message)
 
 @app.route('/login')

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
 
 def get_all_liked_tracks(sp, total_to_get):
-    all_tracks = ["liked"]
+    all_tracks = []
     offset = 0
     limit = 50
 
@@ -48,7 +48,7 @@ def get_all_track_names(sp, playlist_id, total_to_get):
 
 
 def get_all_playlists(sp):
-    playlists = []
+    playlists = ["liked",]
     limit = 50
     offset = 0
 
