@@ -33,16 +33,18 @@ def get_token():
     return token_info
 
 sp = None
+playlists = []
 
 def get_SP():
     global sp
+    global playlists
     token_info = session.get("token_info", None)
     if not token_info:
         return redirect(url_for('login'))
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
     playlists = get_all_playlists(sp)
-    render_template("index.html", my_list=playlists)
+    
     
 
 @app.route("/", methods=["GET", "POST"])
@@ -76,7 +78,7 @@ def index():
             
 
         
-
+    render_template("index.html", my_list=playlists)
     return render_template("index.html", message=message)
 
 @app.route('/login')
