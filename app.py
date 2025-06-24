@@ -41,14 +41,14 @@ def get_SP():
         return redirect(url_for('login'))
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    playlists = get_all_playlists(sp)
+    render_template("index.html", my_list=playlists)
     
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     get_SP()
     message = None
-    playlists = get_all_playlists(sp)
-    render_template("index.html", my_list=playlists)
     if request.method == "POST":
         action = request.form.get('action')
         if action == 'sort':
