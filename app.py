@@ -97,7 +97,7 @@ def index():
             topArtistsSongs(sp, selected_time)
         elif action == 'test':
             playlists = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
-            return render_template("index.html", message="test", mylist=playlists)
+            return render_template("index.html", message="test", my_list=playlists)
             
 
         
