@@ -103,7 +103,7 @@ def index():
 
         
     
-    return render_template("index.html", message=message)
+    return render_template("index.html", message=message, my_list=playlist)
 
 @app.route('/login')
 def login():
