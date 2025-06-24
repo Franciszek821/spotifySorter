@@ -32,8 +32,17 @@ def get_token():
     session["token_info"] = token_info
     return token_info
 
+sp = None
 
-
+def get_SP():
+    global sp
+    token_info = session.get("token_info", None)
+    if not token_info:
+        return redirect(url_for('login'))
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    
+get_SP()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -42,53 +51,23 @@ def index():
         action = request.form.get('action')
         if action == 'sort':
             selected_Songs = request.form.get('numSort')
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            user_id = sp.current_user()['id']
             sort(sp, int(selected_Songs))
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             clear_playlists(sp)
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
             selected_time = request.form.get('time')
-            print("Selected time:", selected_time)  # Debug
-
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
-            print("Selected artist:", selected_artist)
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            print("BIIIIIIG CHUUUUUUJ")
             print(sp.me())
             message = artistTop(sp, selected_artist)
                         
         elif action == 'topArtistsSongs':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             print(topArtistsSongs(sp))
+        
             
 
         

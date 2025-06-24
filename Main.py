@@ -26,6 +26,21 @@ def get_all_liked_tracks(sp, total_to_get):
 
     return all_tracks
 
+def get_all_playlists(sp):
+    playlists = []
+    limit = 50
+    offset = 0
+
+    while True:
+        response = sp.current_user_playlists(limit=limit, offset=offset)
+        playlists.extend(response['items'])
+        if response['next']:
+            offset += limit
+        else:
+            break
+
+    return playlists
+
 
 
 def get_playlist_id_by_name(sp, playlist_name):
@@ -247,17 +262,6 @@ def topArtistsSongs(sp):
 
 
 #TODO:
-# make a loading wheel when sorting
-
-#current_user_top_artists(limit=20, offset=0, time_range='medium_term') this and top 10 from 5 artists
-
-# 2. Add a button to sort liked songs by genre
-# sort by genre 
-# have the abbility to sort the playlist you want not only the liked songs
-
-
-#artist_related_artists(artist_id)
-#artist_top_tracks(artist_id)
-#current_user_top_tracks(limit=20, offset=0, time_range='medium_term')
-#recommendation_genre_seeds()
-#user(user)
+# make a loading wheel when functions are running
+# make it preaty
+# make it possible to sort not only liked songs but also playlists
