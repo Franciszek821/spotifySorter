@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
 
 def get_all_liked_tracks(sp, total_to_get):
-    all_tracks = []
+    all_tracks = ["liked"]
     offset = 0
     limit = 50
 
@@ -25,6 +25,27 @@ def get_all_liked_tracks(sp, total_to_get):
         offset += current_limit
 
     return all_tracks
+
+def get_all_track_names(sp, playlist_id, total_to_get):
+    track_names = []
+    limit = 50
+    offset = 0
+
+    while len(track_names) < total_to_get:
+        response = sp.playlist_tracks(playlist_id=playlist_id, limit=limit, offset=offset)
+        for item in response['items']:
+            track = item['track']
+            if track:  # Make sure track is not None (can happen with deleted tracks)
+                track_names.append(track['name'])
+
+        if response['next']:
+            offset += limit
+        else:
+            break
+
+    return track_names
+
+
 
 def get_all_playlists(sp):
     playlists = []
@@ -90,13 +111,13 @@ def checkIfPlaylistExists(sp, playlist_name):
     return False
 
 
-def checkIfSongInPlaylist(sp, song_id, pl_id):
+def checkIfSongInPlaylist(sp, song_id, playlist_id):
     songs = []
     limit = 50
     offset = 0
 
     while True:
-        response = sp.playlist_tracks(playlist_id=pl_id, limit=limit, offset=offset)
+        response = sp.playlist_tracks(playlist_id=playlist_id, limit=limit, offset=offset)
         songs.extend(response['items'])
         if response['next']:
             offset += limit
@@ -116,7 +137,6 @@ def sort(sp, total_to_get):
     playlist_id = None
     # Fetch all liked songs
     liked_tracks = get_all_liked_tracks(sp, total_to_get)
-    print([p['name'] for p in sp.current_user_playlists(limit=50)['items']])
 
     for i in liked_tracks[:total_to_get]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
@@ -218,9 +238,9 @@ def artistTop(sp, selected_artist):
 
 #categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
 
-def topArtistsSongs(sp):
+def topArtistsSongs(sp, selected_time):
 
-    artist = sp.current_user_top_artists(limit=5, offset=0, time_range='medium_term')
+    artist = sp.current_user_top_artists(limit=5, offset=0, time_range=selected_time)
     playlist_name = f"topArtistsSongs"
     if not checkIfPlaylistExists(sp, playlist_name):
         sp.user_playlist_create(

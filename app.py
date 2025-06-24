@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
-from Main import sort, clear_playlists, top20_songs, artistTop, topArtistsSongs
+from Main import sort, clear_playlists, top20_songs, artistTop, topArtistsSongs, get_all_playlists
 from dotenv import load_dotenv
 
 
@@ -47,11 +47,14 @@ def get_SP():
 def index():
     get_SP()
     message = None
+    playlists = get_all_playlists(sp)
+    render_template("index.html", my_list=playlists)
     if request.method == "POST":
         action = request.form.get('action')
         if action == 'sort':
             selected_Songs = request.form.get('numSort')
-            sort(sp, int(selected_Songs))
+            selected_playlist = request.form.get("selected_option")
+            sort(sp, int(selected_Songs), selected_playlist)
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
             clear_playlists(sp)
@@ -62,11 +65,10 @@ def index():
             message = "Top 20 songs playlist has been created."
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
-            print(sp.me())
-            message = artistTop(sp, selected_artist)
-                        
+            message = artistTop(sp, selected_artist)        
         elif action == 'topArtistsSongs':
-            print(topArtistsSongs(sp))
+            selected_time = request.form.get('time')
+            topArtistsSongs(sp, selected_time)
         
             
 

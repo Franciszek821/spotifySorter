@@ -72,12 +72,15 @@
             {% if message %}
                 <p>{{ message }}</p>
             {% endif %}
-            <button type="button" onclick="revealNumberSort(); hideButtons();">Sort Playlists</button>
+
+            <button type="button" name="action" onclick="revealNumberSort(); hideButtons()">Sort Playlists</button>
+            <button type="submit" name ="action" value="test"> TESTING </button>
             <button type="submit" name="action" value="clear">Deletes made playlists</button>
             <button type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
             <button type="button" onclick="revealArtist(); hideButtons();">Top 10 Songs from Artist</button>
             <button type="submit" name ="action" value="topArtistsSongs"> Top 10 songs from your top 5 artists </button> 
-            <button type="submit" name ="action" value="topArtistsSongs"> TESTING </button> 
+            
+            
         </div>
 
         <div id="choices">
@@ -92,6 +95,16 @@
 
         <div id="numberSort">
             <label> The amount of songs to sort: <input type="number" name="numSort" value="20" min="1"></label>
+            <form method="POST">
+                  {% for item in my_list %}
+                    <label>
+                      <input type="radio" name="selected_option" value="{{ item }}">
+                      {{ item }}
+                    </label><br>
+                  {% endfor %}
+                
+
+            </form>
             <button type="submit" name="action" value="sort"> Confirm Sort </button>
             <button type="button" onclick="hideNumberSort(); revealButtons();"> Cancel </button>
         </div>
