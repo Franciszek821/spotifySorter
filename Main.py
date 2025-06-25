@@ -1,6 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
+import time
 
 
 
@@ -163,6 +164,7 @@ def sort(sp, total_to_get, playlist):
         tracks = get_all_track_names(sp, playlist_id, total_to_get)
 
     for i in tracks[:total_to_get]: # Limit to first 1 tracks for testing
+        time.sleep(0.2)  # 5 requests/sec (Spotify recommends max 10 req/sec for public apps)
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
