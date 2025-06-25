@@ -41,7 +41,7 @@ playlists = ["chuj"]
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global playlist
+    global playlists
     message = None
     if request.method == "POST":
         token_info = session.get("token_info", None)
