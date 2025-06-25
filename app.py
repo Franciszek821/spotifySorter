@@ -59,8 +59,8 @@ def index():
             token_info = get_token()
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_Songs = request.form.get('numSort')
-            #selected_playlist = request.form.get("selected_option")
-            sort(sp, int(selected_Songs), playlists)
+            selected_playlist = request.form.get("selected_option")
+            sort(sp, int(selected_Songs), selected_playlist)
             message = "Your liked songs have been sorted and added to the playlists."
         elif action == 'clear':
             token_info = session.get("token_info", None)
