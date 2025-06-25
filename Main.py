@@ -2,10 +2,27 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
 import time
+from spotipy.exceptions import SpotifyException
 
-
-
+# Define decades
 playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
+
+# Retry-safe Spotify API call wrapper
+def safe_spotify_call(func, *args, max_retries=5, **kwargs):
+    for attempt in range(max_retries):
+        try:
+            return func(*args, **kwargs)
+        except SpotifyException as e:
+            if e.http_status == 429:
+                wait_time = int(e.headers.get("Retry-After", 1))
+                print(f"[Rate limited] Waiting {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                raise
+        except Exception as e:
+            print(f"[Retry {attempt+1}/{max_retries}] Error: {e}")
+            time.sleep(2)
+    raise Exception("Max retries exceeded for Spotify API call")
 
 def get_all_liked_tracks(sp, total_to_get):
     all_tracks = []
@@ -16,7 +33,7 @@ def get_all_liked_tracks(sp, total_to_get):
         remaining = total_to_get - len(all_tracks)
         current_limit = min(limit, remaining)
 
-        results = sp.current_user_saved_tracks(limit=current_limit, offset=offset)
+        results = safe_spotify_call(sp.current_user_saved_tracks, limit=current_limit, offset=offset)
         items = results['items']
 
         if not items:
@@ -33,12 +50,11 @@ def get_all_track_names(sp, playlist_id, total_to_get):
     offset = 0
 
     while len(track_names) < total_to_get:
-        response = sp.playlist_tracks(playlist_id=playlist_id, limit=limit, offset=offset)
+        response = safe_spotify_call(sp.playlist_tracks, playlist_id=playlist_id, limit=limit, offset=offset)
         for item in response['items']:
             track = item
-            if track:  # Make sure track is not None (can happen with deleted tracks)
-                track_names.extend([track])  # Append the entire track object
-                
+            if track:
+                track_names.append(track)
 
         if response['next']:
             offset += limit
@@ -47,49 +63,28 @@ def get_all_track_names(sp, playlist_id, total_to_get):
 
     return track_names
 
-
 def get_all_playlists(sp):
     playlists = ["liked"]
     limit = 50
     offset = 0
 
     while True:
-        response = sp.current_user_playlists(limit=limit, offset=offset)
-        playlists.extend(response['items'])
-        if response['next']:
-            offset += limit
-        else:
-            break
-
-    return playlists
-
-
-
-def get_all_playlists(sp):
-    playlists = ["liked"]
-    limit = 50
-    offset = 0
-
-    while True:
-        response = sp.current_user_playlists(limit=limit, offset=offset)
+        response = safe_spotify_call(sp.current_user_playlists, limit=limit, offset=offset)
         for item in response['items']:
-            playlists.append(item['name'])  # 👈 Only append the name
+            playlists.append(item['name'])
         if response['next']:
             offset += limit
         else:
             break
 
     return playlists
-
-
-
 
 def get_playlist_id_by_name(sp, playlist_name):
     limit = 50
     offset = 0
 
     while True:
-        playlists = sp.current_user_playlists(limit=limit, offset=offset)
+        playlists = safe_spotify_call(sp.current_user_playlists, limit=limit, offset=offset)
         for pla in playlists['items']:
             if pla['name'].lower() == playlist_name.lower():
                 return pla['id']
@@ -98,17 +93,13 @@ def get_playlist_id_by_name(sp, playlist_name):
         else:
             break
 
-    return None  # Not found
-
+    return None
 
 def get_artist_id(sp, artist_name):
-    result = sp.search(q=f'artist:{artist_name}', type='artist', limit=1)
+    result = safe_spotify_call(sp.search, q=f'artist:{artist_name}', type='artist', limit=1)
     if result['artists']['items']:
         return result['artists']['items'][0]['id']
     return None
-
-
-
 
 def checkIfPlaylistExists(sp, playlist_name):
     playlists = []
@@ -116,20 +107,17 @@ def checkIfPlaylistExists(sp, playlist_name):
     offset = 0
 
     while True:
-        response = sp.current_user_playlists(limit=limit, offset=offset)
+        response = safe_spotify_call(sp.current_user_playlists, limit=limit, offset=offset)
         playlists.extend(response['items'])
         if response['next']:
             offset += limit
         else:
             break
 
-
     for pl in playlists:
         if pl['name'] == playlist_name:
-            playlist_id=pl['id']
             return True
     return False
-
 
 def checkIfSongInPlaylist(sp, song_id, playlist_id):
     songs = []
@@ -137,36 +125,30 @@ def checkIfSongInPlaylist(sp, song_id, playlist_id):
     offset = 0
 
     while True:
-        response = sp.playlist_tracks(playlist_id=playlist_id, limit=limit, offset=offset)
+        response = safe_spotify_call(sp.playlist_tracks, playlist_id=playlist_id, limit=limit, offset=offset)
         songs.extend(response['items'])
         if response['next']:
             offset += limit
         else:
             break
 
-
     for pl in songs:
         if pl['track']['id'] == song_id:
             return True
     return False
 
-
 def sort(sp, total_to_get, playlist):
-
-    
     playlist_id = None
-    # Fetch all liked songs
     if playlist == "liked":
         tracks = get_all_liked_tracks(sp, total_to_get)
-
-    if playlist != "liked":
+    else:
         playlist_id = get_playlist_id_by_name(sp, playlist)
         tracks = get_all_track_names(sp, playlist_id, total_to_get)
 
-    for i in tracks[:total_to_get]: # Limit to first 1 tracks for testing
-        time.sleep(0.2)  # 5 requests/sec (Spotify recommends max 10 req/sec for public apps)
+    for i in tracks[:total_to_get]:
+        time.sleep(0.2)
         song_id = i['track']['id']
-        track = sp.track(song_id)
+        track = safe_spotify_call(sp.track, song_id)
         year = int(track['album']['release_date'].split("-")[0])
 
         for pla in playlistsLIST:
@@ -174,58 +156,58 @@ def sort(sp, total_to_get, playlist):
                 continue
 
             if year >= int(pla) and year < int(pla) + 10:
-                #print(f"Playlist ID for {pla}: {playlist_id}")
                 playlists = get_all_playlists(sp)
                 if pla not in playlists:
-                    sp.user_playlist_create(
-                        user=sp.current_user()['id'],
+                    safe_spotify_call(
+                        sp.user_playlist_create,
+                        user=safe_spotify_call(sp.current_user)['id'],
                         name=pla,
                         public=False,
                         description="Made by Spotify Sorter"
                     )
 
-                    
-
                 playlist_id = get_playlist_id_by_name(sp, pla)
                 if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                    sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
-                    #print(f"chuj")
-
-                break 
+                    safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+                break
 
         if year < 1940:
             if not checkIfPlaylistExists(sp, "older"):
-                sp.user_playlist_create(user=sp.current_user()['id'], name="older", public=False, description="Made by Spotify Sorter")
+                safe_spotify_call(
+                    sp.user_playlist_create,
+                    user=safe_spotify_call(sp.current_user)['id'],
+                    name="older",
+                    public=False,
+                    description="Made by Spotify Sorter"
+                )
 
             playlist_id = get_playlist_id_by_name(sp, "older")
-
             if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+                safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
 
 def clear_playlists(sp):
     limit = 50
     offset = 0
     while True:
-        playlists_response = sp.current_user_playlists(limit=limit, offset=offset)
+        playlists_response = safe_spotify_call(sp.current_user_playlists, limit=limit, offset=offset)
         playlists = playlists_response['items']
         
         for pla in playlists:
             if pla.get('description') == "Made by Spotify Sorter":
-                sp.current_user_unfollow_playlist(pla['id'])
+                safe_spotify_call(sp.current_user_unfollow_playlist, pla['id'])
         
         if playlists_response.get('next'):
             offset += limit
         else:
             break
 
-
 def top20_songs(sp, selected_time):
-    topSongs = sp.current_user_top_tracks(limit=20, offset=0, time_range=selected_time)
+    topSongs = safe_spotify_call(sp.current_user_top_tracks, limit=20, offset=0, time_range=selected_time)
     for song in topSongs['items']:
-        #print("Adding song to Top20 playlist:", song['name'])
         if not checkIfPlaylistExists(sp, "Top20" + str(selected_time)):
-            sp.user_playlist_create(
-                user=sp.current_user()['id'],
+            safe_spotify_call(
+                sp.user_playlist_create,
+                user=safe_spotify_call(sp.current_user)['id'],
                 name=f"Top20{selected_time}",
                 public=False,
                 description="Made by Spotify Sorter"
@@ -233,22 +215,22 @@ def top20_songs(sp, selected_time):
 
         playlist_id = get_playlist_id_by_name(sp, "Top20" + str(selected_time))
         if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+            safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
 def artistTop(sp, selected_artist):
     artist_id = get_artist_id(sp, selected_artist)
     if artist_id is None:
         return f"Artist '{selected_artist}' not found."
     
-    topSongs = sp.artist_top_tracks(artist_id)
-    
+    topSongs = safe_spotify_call(sp.artist_top_tracks, artist_id)
     if 'tracks' not in topSongs or not topSongs['tracks']:
         return f"No top tracks found for artist '{selected_artist}'."
     
     playlist_name = f"Top10 {selected_artist}"
     if not checkIfPlaylistExists(sp, playlist_name):
-        sp.user_playlist_create(
-            user=sp.current_user()['id'],
+        safe_spotify_call(
+            sp.user_playlist_create,
+            user=safe_spotify_call(sp.current_user)['id'],
             name=playlist_name,
             public=False,
             description="Made by Spotify Sorter"
@@ -258,20 +240,17 @@ def artistTop(sp, selected_artist):
 
     for song in topSongs['tracks']:
         if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-            sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+            safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
     
     return f"Top 10 songs playlist for '{selected_artist}' has been created."
 
-
-#categories = ["Made For You", "New Releases", "Summer", "Hip-Hop", "Pop", "Mood", "Charts", "Indie", "Trending", "Dance/Electronic", "Rock", "Discover", "Chill", "Party", "Disco Polo", "RADAR", "Workout", "EQUAL", "Decades", "GLOW", "K-pop", "Sleep", "At Home", "Latin", "Love", "Fresh Finds", "Metal", "Anime", "Jazz", "Classical", "Netflix", "Focus", "Folk & Acoustic", "Soul", "Kids & Family", "Gaming", "TV & Movies", "R&B", "Instrumental"]
-
 def topArtistsSongs(sp, selected_time):
-
-    artist = sp.current_user_top_artists(limit=5, offset=0, time_range=selected_time)
+    artist = safe_spotify_call(sp.current_user_top_artists, limit=5, offset=0, time_range=selected_time)
     playlist_name = f"topArtistsSongs"
     if not checkIfPlaylistExists(sp, playlist_name):
-        sp.user_playlist_create(
-            user=sp.current_user()['id'],
+        safe_spotify_call(
+            sp.user_playlist_create,
+            user=safe_spotify_call(sp.current_user)['id'],
             name=playlist_name,
             public=False,
             description="Made by Spotify Sorter"
@@ -279,40 +258,10 @@ def topArtistsSongs(sp, selected_time):
     playlist_id = get_playlist_id_by_name(sp, playlist_name)
     
     for art in artist['items']:
-        topSongs = sp.artist_top_tracks(art['id'])
+        topSongs = safe_spotify_call(sp.artist_top_tracks, art['id'])
         if 'tracks' not in topSongs or not topSongs['tracks']:
             continue
 
         for song in topSongs['tracks']:
             if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-                sp.playlist_add_items(playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
-
-
-
-
-
-
-
-
-
-
-            
-    
-
-
-
-
-
-
-
-
-
-
-#TODO:
-# make a loading wheel when functions are running
-# make it preaty
-
-# make it possible to sort not only liked songs but also playlists
-# make to many playlists
-# not all songs are added to the playlists
-# top 10 songs by artist does not work
+                safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
