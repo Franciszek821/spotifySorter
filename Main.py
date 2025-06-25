@@ -34,7 +34,7 @@ def get_all_track_names(sp, playlist_id, total_to_get):
     while len(track_names) < total_to_get:
         response = sp.playlist_tracks(playlist_id=playlist_id, limit=limit, offset=offset)
         for item in response['items']:
-            track = item['track']
+            track = item
             if track:  # Make sure track is not None (can happen with deleted tracks)
                 track_names.extend([track])  # Append the entire track object
                 
@@ -163,7 +163,7 @@ def sort(sp, total_to_get, playlist):
         tracks = get_all_track_names(sp, playlist_id, total_to_get)
 
     for i in tracks[:total_to_get]: # Limit to first 1 tracks for testing
-        song_id = i['id']
+        song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
 
@@ -309,3 +309,6 @@ def topArtistsSongs(sp, selected_time):
 # make a loading wheel when functions are running
 # make it preaty
 # make it possible to sort not only liked songs but also playlists
+# make to many playlists
+# not all songs are added to the playlists
+# top 10 songs by artist does not work

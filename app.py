@@ -70,6 +70,7 @@ def index():
             selected_playlist = request.form.get("selected_option")
             sort(sp, int(selected_Songs), selected_playlist)
             message = "Your liked songs have been sorted and added to the playlists."
+            playlists = get_all_playlists(sp)
         elif action == 'clear':
             token_info = session.get("token_info", None)
             if not token_info:
@@ -78,6 +79,7 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             clear_playlists(sp)
             message = "All playlists have been cleared."
+            playlists = get_all_playlists(sp)
         elif action == 'top20_songs':
             token_info = session.get("token_info", None)
             if not token_info:
@@ -87,6 +89,7 @@ def index():
             selected_time = request.form.get('time')
             top20_songs(sp, selected_time)
             message = "Top 20 songs playlist has been created."
+            playlists = get_all_playlists(sp)
         elif action == 'top10_artist':
             token_info = session.get("token_info", None)
             if not token_info:
@@ -95,6 +98,7 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_artist = request.form.get('artist')
             message = artistTop(sp, selected_artist)        
+            playlists = get_all_playlists(sp)
         elif action == 'topArtistsSongs':
             token_info = session.get("token_info", None)
             if not token_info:
@@ -103,6 +107,7 @@ def index():
             sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
             selected_time = request.form.get('time')
             topArtistsSongs(sp, selected_time)
+            playlists = get_all_playlists(sp)
         
             
 
