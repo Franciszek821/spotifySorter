@@ -163,7 +163,7 @@ def sort(sp, total_to_get, playlist):
         tracks = get_all_track_names(sp, playlist_id, total_to_get)
 
     for i in tracks[:total_to_get]: # Limit to first 1 tracks for testing
-        song_id = i['track']['id']
+        song_id = i['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
 
