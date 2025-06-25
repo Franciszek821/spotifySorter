@@ -13,3 +13,5 @@ services:
         sync: false
       - key: FLASK_SECRET_KEY
         sync: false
+      - key: GUNICORN_CMD_ARGS
+        value: "--timeout 300"
