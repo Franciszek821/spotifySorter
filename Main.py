@@ -48,7 +48,7 @@ def get_all_track_names(sp, playlist_id, total_to_get):
 
 
 def get_all_playlists(sp):
-    playlists = ["liked",]
+    playlists = ["liked"]
     limit = 50
     offset = 0
 
@@ -131,14 +131,19 @@ def checkIfSongInPlaylist(sp, song_id, playlist_id):
     return False
 
 
-def sort(sp, total_to_get):
+def sort(sp, total_to_get, playlist):
 
     
     playlist_id = None
     # Fetch all liked songs
-    liked_tracks = get_all_liked_tracks(sp, total_to_get)
+    if playlist == "liked":
+        tracks = get_all_liked_tracks(sp, total_to_get)
 
-    for i in liked_tracks[:total_to_get]: # Limit to first 1 tracks for testing
+    if playlist != "liked":
+        playlist_id = get_playlist_id_by_name(sp, playlist)
+        tracks = get_all_track_names(sp, playlist_id, total_to_get)
+
+    for i in tracks[:total_to_get]: # Limit to first 1 tracks for testing
         song_id = i['track']['id']
         track = sp.track(song_id)
         year = int(track['album']['release_date'].split("-")[0])
