@@ -34,8 +34,8 @@ def get_token():
 
 sp = None
 
-playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
-
+#playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
+playlists = []
     
     
 
@@ -103,7 +103,7 @@ def index():
 
         
     
-    return render_template("index.html", message=message, my_list=playlist)
+    return render_template("index.html", message=message, my_list=playlists)
 
 @app.route('/login')
 def login():
