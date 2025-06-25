@@ -12,14 +12,9 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
-sp2 = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id=os.getenv("SPOTIPY_CLIENT_ID"),
-    client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
-    redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-    scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative user-top-read"
-))
 
-playlists = get_all_playlists(sp2)
+
+
 
 def get_token():
     sp_oauth = SpotifyOAuth(
@@ -48,15 +43,21 @@ sp = None
 @app.route("/", methods=["GET", "POST"])
 def index():
     global playlists
-    
+    message = None
+    token_info = session.get("token_info", None)
+
+    if not token_info:
+        return redirect(url_for('login'))
+
+    # Refresh token if expired
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+
+    # ✅ Now you can safely fetch playlists
+    playlists = get_all_playlists(sp)
+
     if request.method == "POST":
-        message = None
-        token_info = session.get("token_info", None)
-        if not token_info:
-            return redirect(url_for('login'))
-        token_info = get_token()
-        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-        #playlists = get_all_playlists(sp)
+        
         action = request.form.get('action')
         if action == 'sort':
 
