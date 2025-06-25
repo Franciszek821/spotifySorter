@@ -36,7 +36,8 @@ def get_all_track_names(sp, playlist_id, total_to_get):
         for item in response['items']:
             track = item['track']
             if track:  # Make sure track is not None (can happen with deleted tracks)
-                track_names.append(track['name'])
+                track_names.extend([track])  # Append the entire track object
+                
 
         if response['next']:
             offset += limit
@@ -44,6 +45,22 @@ def get_all_track_names(sp, playlist_id, total_to_get):
             break
 
     return track_names
+
+
+def get_all_playlists(sp):
+    playlists = ["liked"]
+    limit = 50
+    offset = 0
+
+    while True:
+        response = sp.current_user_playlists(limit=limit, offset=offset)
+        playlists.extend(response['items'])
+        if response['next']:
+            offset += limit
+        else:
+            break
+
+    return playlists
 
 
 
