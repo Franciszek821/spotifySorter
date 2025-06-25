@@ -161,7 +161,7 @@ def sort(sp, total_to_get, playlist):
                     safe_spotify_call(
                         sp.user_playlist_create,
                         user=safe_spotify_call(sp.current_user)['id'],
-                        name=pla,
+                        name=f"{pla} from {playlist}",
                         public=False,
                         description="Made by Spotify Sorter"
                     )
