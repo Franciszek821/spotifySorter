@@ -54,13 +54,15 @@ def get_all_playlists(sp):
 
     while True:
         response = sp.current_user_playlists(limit=limit, offset=offset)
-        playlists.extend(response['items'])
+        for item in response['items']:
+            playlists.append(item['name'])  # 👈 Only append the name
         if response['next']:
             offset += limit
         else:
             break
 
     return playlists
+
 
 
 
