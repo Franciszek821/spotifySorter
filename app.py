@@ -43,13 +43,14 @@ playlists = ["chuj"]
 def index():
     global playlists
     message = None
+    token_info = session.get("token_info", None)
+    if not token_info:
+        return redirect(url_for('login'))
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    playlists = get_all_playlists(sp)
     if request.method == "POST":
-        token_info = session.get("token_info", None)
-        if not token_info:
-            return redirect(url_for('login'))
-        token_info = get_token()
-        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-        playlists = get_all_playlists(sp)
+        
         action = request.form.get('action')
         if action == 'sort':
 
