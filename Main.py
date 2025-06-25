@@ -172,8 +172,9 @@ def sort(sp, total_to_get, playlist):
                 continue
 
             if year >= int(pla) and year < int(pla) + 10:
-                print(f"Playlist ID for {pla}: {playlist_id}")
-                if not playlist_id:
+                #print(f"Playlist ID for {pla}: {playlist_id}")
+                playlists = get_all_playlists(sp)
+                if pla not in playlists:
                     sp.user_playlist_create(
                         user=sp.current_user()['id'],
                         name=pla,
@@ -308,6 +309,7 @@ def topArtistsSongs(sp, selected_time):
 #TODO:
 # make a loading wheel when functions are running
 # make it preaty
+
 # make it possible to sort not only liked songs but also playlists
 # make to many playlists
 # not all songs are added to the playlists
