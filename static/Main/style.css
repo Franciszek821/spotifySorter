@@ -16,17 +16,22 @@ body {
   position: absolute;
   width: 415px;
   height: 195px;
-  left: 720px;
+  left: 50%;
+  transform: translateX(-50%);
   top: 257px;
+
   font-weight: 900;
   font-size: 36px;
   line-height: 1.5;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* better centering */
-  text-align: center;
+  text-align: center; /* horizontal text alignment */
+
   color: #FFFFFF;
+
+  display: flex;
+  align-items: flex-start; /* no vertical centering */
+  justify-content: center; /* center content horizontally */
 }
+
 
 /* Buttons */
 .button {
@@ -48,17 +53,24 @@ body {
 }
 
 /* Specific button positions */
-.button-1 {
-  left: 512px;
+.button-2 {
+  position: absolute;
+  left: 50%;
   top: 427px;
+  transform: translateX(-50%);
 }
 
-.button-2 {
-  left: 720px;
+.button-1 {
+  position: absolute;
+  left: calc(50% - 208px);
   top: 427px;
+  transform: translateX(-50%);
 }
 
 .button-3 {
-  left: 928px;
+  position: absolute;
+  left: calc(50% + 208px);
   top: 427px;
+  transform: translateX(-50%);
 }
+
