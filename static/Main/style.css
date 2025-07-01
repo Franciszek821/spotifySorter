@@ -33,13 +33,14 @@ body {
 }
 
 
-.button-wrapper {
-  position: relative;
+.button-container {
   display: flex;
   justify-content: center;
-  gap: 208px;            /* space between buttons */
-  margin-top: 427px;     /* vertical position */
-  flex-wrap: wrap;
+  gap: 208px;               /* horizontal spacing */
+  margin-top: 427px;        /* vertical spacing from top */
+  flex-wrap: wrap;          /* allows wrapping on small screens */
+  position: relative;
+  width: 100%;
 }
 
 .button {
@@ -48,17 +49,15 @@ body {
   background: #303030;
   border-radius: 10px;
   font-weight: 500;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: clamp(16px, 2vw, 20px); /* responsive font size */
   color: #FFFFFF;
   cursor: pointer;
   border: none;
-
-  /* Optional: Responsive adjustments */
-  max-width: 30vw;
-  font-size: clamp(16px, 2vw, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
+
 
 
