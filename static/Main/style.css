@@ -32,48 +32,34 @@ body {
   justify-content: center; /* center content horizontally */
 }
 
-.button_group {
+
+.button-wrapper {
+  position: relative;
   display: flex;
+  justify-content: center;
+  gap: 208px;            /* space between buttons */
+  margin-top: 427px;     /* vertical position */
   flex-wrap: wrap;
 }
-/* Buttons */
+
 .button {
-  position: absolute;
   width: 140px;
   height: 50px;
   background: #303030;
   border-radius: 10px;
   font-weight: 500;
   font-size: 20px;
-  line-height: 1.5;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
   color: #FFFFFF;
   cursor: pointer;
   border: none;
-}
 
-/* Specific button positions */
-.button-2 {
-  position: absolute;
-  left: 50%;
-  top: 427px;
-  transform: translateX(-50%);
+  /* Optional: Responsive adjustments */
+  max-width: 30vw;
+  font-size: clamp(16px, 2vw, 20px);
 }
-
-.button-1 {
-  position: absolute;
-  left: calc(50% - 208px);
-  top: 427px;
-  transform: translateX(-50%);
-}
-
-.button-3 {
-  position: absolute;
-  left: calc(50% + 208px);
-  top: 427px;
-  transform: translateX(-50%);
+nsform: translateX(-50%);
 }
 
