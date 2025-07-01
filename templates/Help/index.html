@@ -28,12 +28,14 @@
         <a href="{{ url_for('help_page')}}">
           <button class="help">HELP</button>
         </a>
-        <a href ="{{ url_for('login')}}">
-          <button class="login" id="loginButton">LOGIN</button>
-        </a>
-        <a href ="{{ url_for('logout')}}">
-          <button class="login" id="logoutButton">LOGOUT</button>
-        </a>
+        <div class="login-logout-container">
+          <a href="{{ url_for('login') }}">
+            <button class="login" id="loginButton">LOGIN</button>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <button class="login" id="logoutButton">LOGOUT</button>
+          </a>
+        </div>
         <a href="{{ url_for('about_page') }}">
           <button class="about">ABOUT</button>
         </a>
