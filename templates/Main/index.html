@@ -10,17 +10,17 @@
   <script defer src="{{ url_for('static', filename='Main/main.js') }}"></script>
 </head>
 <body>
-    <div class="main-container">
-      <div class="spotify-sorter">Spotify Sorter</div>
+    <div class="sidebar">
+      <div class="text-block">Spotify Sorter</div>
         
       <a href="{{ url_for('functions') }}">
-          <button class="button button-1">Functions</button>
+          <button class="button">Functions</button>
       </a>
       <a href="{{ url_for('help_page')}}">
-        <button class="button button-2">Help</button>
+        <button class="button">Help</button>
       </a>
       <a href="{{ url_for('about_page')}}">
-        <button class="button button-3">Button 3</button>
+        <button class="button">About</button>
       </a>
     </div>
 </body>
