@@ -56,6 +56,8 @@ body {
 }
 
 .sidebar button {
+  width: 174px;
+  height: 45px;
   background: #181818;
   color: white;
   font-size: 18px;
@@ -64,6 +66,7 @@ body {
   border-radius: 10px;
   cursor: pointer;
 }
+
 
 /* Main content */
 .main {

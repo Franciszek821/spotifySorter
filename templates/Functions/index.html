@@ -12,7 +12,9 @@
   <div class="layout">
     <!-- Header -->
     <header class="header">
-      <button class="spotifySorter">SPOTIFY SORTER</button>
+      <a href = "{{ url_for('main')}}">
+        <button class="spotifySorter">SPOTIFY SORTER</button>
+      </a>
       <span class="textName">name</span>
     </header>
 
@@ -20,7 +22,9 @@
     <div class="content">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <button class="functions">FUNCTIONS</button>
+        <a href ="{{ url_for('functions')}}">
+          <button class="functions">FUNCTIONS</button>
+        </a>
         <a href="{{ url_for('help_page')}}">
           <button class="help">HELP</button>
         </a>
