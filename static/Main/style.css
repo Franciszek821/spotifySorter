@@ -49,16 +49,16 @@ body {
 
 /* Specific button positions */
 .button-1 {
-    left: 622px;
-    top: 427px;
+  left: 512px;
+  top: 427px;
 }
 
 .button-2 {
-    left: 912px;
-    top: 427px;
+  left: 720px;
+  top: 427px;
 }
 
 .button-3 {
-    left: 1204px;
-    top: 427px;
+  left: 928px;
+  top: 427px;
 }
