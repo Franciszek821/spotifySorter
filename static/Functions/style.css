@@ -56,15 +56,17 @@ body {
 }
 
 .sidebar button {
-  width: 174;
-  height: 45;
+  width: 174px;
+  height: 45px;
   background: #181818;
   color: white;
   font-size: 18px;
+  padding: 12px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
 }
+
 
 /* Main content */
 .main {
