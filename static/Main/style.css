@@ -1,3 +1,4 @@
+/* Container */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,132 +11,54 @@ body {
   color: white;
 }
 
-.layout {
+/* Spotify Sorter Section */
+.spotify-sorter {
+  position: absolute;
+  width: 415px;
+  height: 195px;
+  left: 720px;
+  top: 257px;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1.5;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Header */
-.header {
-  background-color: #181818;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.spotifySorter {
-  background: #303030;
-  color: white;
-  font-size: 24px;
-  border: none;
-  border-radius: 10px;
-  padding: 16px 32px;
-  cursor: pointer;
-}
-
-.textName {
-  font-size: 20px;
-}
-
-/* Main content layout */
-.content {
-  display: flex;
-  flex: 1;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 214px;
-  background: rgba(48, 48, 48, 0.5);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-}
-
-.sidebar button {
-  width: 174px;
-  height: 45px;
-  background: #181818;
-  color: white;
-  font-size: 18px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-
-/* Main content */
-.main {
-  flex: 1;
-  padding: 40px;
-}
-
-.textFunctions {
-  font-size: 32px;
-  margin-bottom: 20px;
+  justify-content: center; /* better centering */
+  text-align: center;
+  color: #FFFFFF;
 }
 
 /* Buttons */
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 30px;
-}
-
-.button-group button {
+.button {
+  position: absolute;
   width: 140px;
   height: 50px;
   background: #303030;
-  color: white;
-  font-size: 16px;
-  border: none;
   border-radius: 10px;
-  cursor: pointer;
-}
-
-/* Forms */
-.form-section {
-  margin-top: 20px;
-}
-
-.form-section input[type="text"],
-.form-section input[type="number"] {
-  padding: 8px;
-  margin-left: 8px;
-  border-radius: 5px;
-  border: none;
-  width: 200px;
-}
-
-.form-section button {
-  margin-top: 10px;
-  margin-right: 10px;
-  padding: 10px 16px;
-  background: #303030;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Utility */
-.hidden {
-  display: none;
-}
-
-.text-block {
-  max-width: 912px;
-  width: 100%;   /* allow shrinking */
-  font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 32px;
-  line-height: 150%;
+  font-size: 20px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   color: #FFFFFF;
-  margin-bottom: 40px;
+  cursor: pointer;
+  border: none;
 }
 
+/* Specific button positions */
+.button-1 {
+  left: 443px;
+  top: 427px;
+}
+
+.button-2 {
+  left: 650px;
+  top: 427px;
+}
+
+.button-3 {
+  left: 858px;
+  top: 427px;
+}
