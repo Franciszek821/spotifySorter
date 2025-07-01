@@ -40,7 +40,7 @@ sp = None
 
     
 
-@app.route("/functions", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     global playlists
     message = None
@@ -116,7 +116,7 @@ def index():
 
         
     
-    return render_template("Functions/index.html", message=message, my_list=playlists)
+    return render_template("index.html", message=message, my_list=playlists)
 
 
 
