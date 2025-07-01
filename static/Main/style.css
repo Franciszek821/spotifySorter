@@ -32,7 +32,10 @@ body {
   justify-content: center; /* center content horizontally */
 }
 
-
+.button_group {
+  display: flex;
+  flex-wrap: wrap;
+}
 /* Buttons */
 .button {
   position: absolute;

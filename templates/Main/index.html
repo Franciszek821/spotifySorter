@@ -12,16 +12,17 @@
 <body>
     <div class="main-container">
       <div class="spotify-sorter">SPOTIFY SORTER</div>
-        
-      <a href="{{ url_for('functions') }}">
-          <button class="button button-1">FUNCTIONS</button>
-      </a>
-      <a href="{{ url_for('help_page')}}">
-        <button class="button button-2">HELP</button>
-      </a>
-      <a href="{{ url_for('about_page')}}">
-        <button class="button button-3">ABOUT</button>
-      </a>
+      <div class="button-group">
+        <a href="{{ url_for('functions') }}">
+            <button class="button button-1">FUNCTIONS</button>
+        </a>
+        <a href="{{ url_for('help_page')}}">
+          <button class="button button-2">HELP</button>
+        </a>
+        <a href="{{ url_for('about_page')}}">
+          <button class="button button-3">ABOUT</button>
+        </a>
+      </div>
     </div>
 </body>
 </html>
