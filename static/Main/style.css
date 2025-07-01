@@ -18,7 +18,7 @@ body {
   height: 195px;
   left: 50%;
   transform: translateX(-50%);
-  top: 257px;
+  top: 357px;
 
   font-weight: 900;
   font-size: 36px;
@@ -56,21 +56,21 @@ body {
 .button-2 {
   position: absolute;
   left: 50%;
-  top: 327px;
+  top: 427px;
   transform: translateX(-50%);
 }
 
 .button-1 {
   position: absolute;
   left: calc(50% - 208px);
-  top: 327px;
+  top: 427px;
   transform: translateX(-50%);
 }
 
 .button-3 {
   position: absolute;
   left: calc(50% + 208px);
-  top: 327px;
+  top: 427px;
   transform: translateX(-50%);
 }
 
