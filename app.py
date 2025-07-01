@@ -120,7 +120,7 @@ def functions():
 
         
     
-    return render_template("index.html", message=message, my_list=playlists)
+    return render_template("Functions/index.html", message=message, my_list=playlists)
 
 
 @app.route('/help')
