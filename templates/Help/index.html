@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='Help/style.css') }}">
   <script defer src="{{ url_for('static', filename='Help/main.js') }}"></script>
 </head>
-<body>
+<body data-logged-in="{{ 'true' if 'token_info' in session else 'false' }}">
   <div class="layout">
     <!-- Header -->
     <header class="header">
@@ -29,7 +29,10 @@
           <button class="help">HELP</button>
         </a>
         <a href ="{{ url_for('login')}}">
-          <button class="login">LOGIN</button>
+          <button class="login" id="loginButton">LOGIN</button>
+        </a>
+        <a href ="{{ url_for('logout')}}">
+          <button class="login" id="logoutButton">LOGOUT</button>
         </a>
         <a href="{{ url_for('about_page') }}">
           <button class="about">ABOUT</button>

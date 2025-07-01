@@ -42,7 +42,8 @@ sp = None
 
 @app.route("/")
 def main():
-    return render_template("Main/index.html")
+    is_logged_in = "token_info" in session
+    return render_template("Main/index.html", is_logged_in=is_logged_in)
 
 @app.route("/functions", methods=["GET", "POST"])
 def functions():
@@ -119,17 +120,19 @@ def functions():
             
 
         
-    
-    return render_template("Functions/index.html", message=message, my_list=playlists)
+    is_logged_in = "token_info" in session
+    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in)
 
 
 @app.route('/help')
 def help_page():
-    return render_template("Help/index.html")
+    is_logged_in = "token_info" in session
+    return render_template("Help/index.html", is_logged_in=is_logged_in)
 
 @app.route('/about')
 def about_page():
-    return render_template('About/index.html')
+    is_logged_in = "token_info" in session
+    return render_template('About/index.html', is_logged_in=is_logged_in)
 
 @app.route('/login')
 def login():
@@ -141,6 +144,12 @@ def login():
     )
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
+
+@app.route('/logout')
+def logout():
+    session.clear()  # Clear all session data (token, etc.)
+    return redirect(url_for('main'))  # Redirect to home or login page
+
 
 
 
