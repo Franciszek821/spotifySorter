@@ -56,21 +56,21 @@ body {
 .button-2 {
   position: absolute;
   left: 50%;
-  top: 427px;
+  top: 327px;
   transform: translateX(-50%);
 }
 
 .button-1 {
   position: absolute;
   left: calc(50% - 208px);
-  top: 427px;
+  top: 327px;
   transform: translateX(-50%);
 }
 
 .button-3 {
   position: absolute;
   left: calc(50% + 208px);
-  top: 427px;
+  top: 327px;
   transform: translateX(-50%);
 }
 
