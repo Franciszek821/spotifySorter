@@ -21,7 +21,9 @@
       <!-- Sidebar -->
       <aside class="sidebar">
         <button class="functions">FUNCTIONS</button>
-        <button class="help">HELP</button>
+        <a href="{{ url_for('help_page')}}">
+          <button class="help">HELP</button>
+        </a>
         <button class="login">LOGIN</button>
         <a href="{{ url_for('about_page') }}">
           <button class="about">ABOUT</button>
