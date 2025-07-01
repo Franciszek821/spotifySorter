@@ -1,0 +1,61 @@
+/* Container */
+.main-container {
+  position: relative;
+  width: 1440px;
+  height: 880px;
+  background: #212121;
+  font-family: 'Inter', sans-serif;
+  color: white;
+}
+
+/* Spotify Sorter Section */
+.spotify-sorter {
+  position: absolute;
+  width: 415px;
+  height: 195px;
+  left: 513px;
+  top: 257px;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* better centering */
+  text-align: center;
+  color: #FFFFFF;
+}
+
+/* Buttons */
+.button {
+  position: absolute;
+  width: 140px;
+  height: 50px;
+  background: #303030;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #FFFFFF;
+  cursor: pointer;
+  border: none;
+}
+
+/* Specific button positions */
+.button-1 {
+  left: 443px;
+  top: 427px;
+}
+
+.button-2 {
+  left: 650px;
+  top: 427px;
+}
+
+.button-3 {
+  left: 858px;
+  top: 427px;
+}

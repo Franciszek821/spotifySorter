@@ -40,8 +40,12 @@ sp = None
 
     
 
-@app.route("/", methods=["GET", "POST"])
-def index():
+@app.route("/")
+def main():
+    return render_template("Main/index.html")
+
+@app.route("/functions", methods=["GET", "POST"])
+def functions():
     global playlists
     message = None
     token_info = session.get("token_info", None)
@@ -117,7 +121,6 @@ def index():
         
     
     return render_template("index.html", message=message, my_list=playlists)
-
 
 
 @app.route('/help')
