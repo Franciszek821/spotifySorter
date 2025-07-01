@@ -156,7 +156,7 @@ def callback():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
-    return redirect(url_for('index'))
+    return redirect(url_for('main'))
 
 
 
