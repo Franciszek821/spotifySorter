@@ -60,6 +60,5 @@ body {
   max-width: 30vw;
   font-size: clamp(16px, 2vw, 20px);
 }
-nsform: translateX(-50%);
-}
+
 
