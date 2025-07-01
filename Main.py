@@ -265,3 +265,16 @@ def topArtistsSongs(sp, selected_time):
         for song in topSongs['tracks']:
             if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
                 safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+
+
+
+
+# make the timeout higher
+# Top 10 songs from your top 5 artists  make it possible to choose the time range
+# make it pretty
+# test everything few times
+# make a test design
+
+
+
+

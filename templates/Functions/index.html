@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Sorter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='Functions/style.css') }}">
+  <script defer src="{{ url_for('static', filename='Functions/main.js') }}"></script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Header -->
+    <header class="header">
+      <button class="spotifySorter">SPOTIFY SORTER</button>
+      <span class="textName">name</span>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <button class="functions">FUNCTIONS</button>
+        <button class="help">HELP</button>
+        <button class="login">LOGIN</button>
+        <a href="{{ url_for('about') }}">
+          <button class="about">ABOUT</button>
+        </a>
+
+      </aside>
+
+      <!-- Main -->
+      <main class="main">
+        <h2 class="textFunctions">FUNCTIONS</h2>
+
+        <form id="mainForm" method="post">
+          {% if message %}
+            <p class="text-block">{{ message }}</p>
+          {% endif %}
+
+          <div id="buttons" class="button-group">
+            <button class="sort" type="button" onclick="revealNumberSort(); hideButtons()">Sort Playlists</button>
+            <button class="delete" type="submit" name="action" value="clear">Delete Playlists</button>
+            <button class="top20" type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
+            <button class="top10fromArt" type="button" onclick="revealArtist(); hideButtons();">Top 10 by Artist</button>
+            <button class="topArtist" type="submit" name="action" value="topArtistsSongs">Top from Top 5 Artists</button>
+          </div>
+
+          <!-- Choices -->
+          <div id="choices" class="form-section hidden">
+            <p>Select the time range for top 20 songs:</p>
+            <label><input type="radio" name="time" value="short_term" /> Short term (4 weeks)</label><br />
+            <label><input type="radio" name="time" value="medium_term" /> Medium term (6 months)</label><br />
+            <label><input type="radio" name="time" value="long_term" /> All time</label><br />
+
+            <button type="submit" name="action" value="top20_songs">Confirm</button>
+            <button type="button" onclick="hideChoices(); revealButtons();">Cancel</button>
+          </div>
+
+          <!-- Number Sort -->
+          <div id="numberSort" class="form-section hidden">
+            <label>Number of songs to sort:
+              <input type="number" name="numSort" value="20" min="1" />
+            </label><br /><br />
+
+            {% for item in my_list %}
+              <label>
+                <input type="radio" name="selected_option" value="{{ item }}" />
+                {{ item }}
+              </label><br />
+            {% endfor %}
+
+            <button type="submit" name="action" value="sort">Confirm Sort</button>
+            <button type="button" onclick="hideNumberSort(); revealButtons();">Cancel</button>
+          </div>
+
+          <!-- Artist -->
+          <div id="artist" class="form-section hidden">
+            <label>Artist name:
+              <input type="text" name="artist" />
+            </label><br />
+            <button type="submit" name="action" value="top10_artist">Confirm</button>
+            <button type="button" onclick="hideArtist(); revealButtons();">Cancel</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

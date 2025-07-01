@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Sorter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='Help/style.css') }}">
+  <script defer src="{{ url_for('static', filename='Help/main.js') }}"></script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Header -->
+    <header class="header">
+      <button class="spotifySorter">SPOTIFY SORTER</button>
+      <span class="textName">name</span>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <button class="functions">FUNCTIONS</button>
+        <button class="help">HELP</button>
+        <button class="login">LOGIN</button>
+        <button class="about">ABOUT</button>
+      </aside>
+
+      <!-- Main -->
+      <main class="main">
+        <h2 class="textFunctions">HELP</h2>
+
+        <form id="mainForm" method="post">
+          <div id="buttons" class="button-group">
+            <button class="sort" type="button" onclick="revealSort(); hideDelete(); hideTop20(); hideTop10fromArt(); hideTopArtist();">Sort Playlists</button>
+            <button class="delete" type="button" onclick="revealDelete(); hideSort(); hideTop20(); hideTop10fromArt(); hideTopArtist();">Delete Playlists</button>
+            <button class="top20" type="button" onclick="revealTop20(); hideSort(); hideDelete(); hideTop10fromArt(); hideTopArtist();">Top 20 Songs</button>
+            <button class="top10fromArt" type="button" onclick="revealTop10fromArt(); hideSort(); hideDelete(); hideTop20(); hideTopArtist();">Top 10 by Artist</button>
+            <button class="topArtist" type="button" onclick="revealTopArtist(); hideSort(); hideDelete(); hideTop20(); hideTop10fromArt();">Top from Top 5 Artists</button>
+          </div>
+          <div class="text-block">
+            <div class="textSort" id="textSort">test sort</div>
+            <div class="textDelete" id="textDelete">test delete</div>
+            <div class="textTop20" id="textTop20">test top20</div>
+            <div class="textTop10fromArt" id="textTop10fromArt">test top10fromArt</div>
+            <div class="textTopArtist" id="textTopArtist">test topArtist</div>
+          </div>
+          
+
+          
+        </form>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

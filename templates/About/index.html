@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Sorter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='about/style.css') }}">
+  <script defer src="{{ url_for('static', filename='about/main.js') }}"></script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Header -->
+    <header class="header">
+      <button class="spotifySorter">SPOTIFY SORTER</button>
+      <span class="textName">name</span>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <button class="functions">FUNCTIONS</button>
+        <button class="help">HELP</button>
+        <button class="login">LOGIN</button>
+        <button class="about">ABOUT</button>
+      </aside>
+
+      <!-- Main -->
+      <main class="main">
+        <h2 class="textFunctions">ABOUT</h2>
+        <div class="text-block">TEST TEST TESTTEST TEST TESTTEST TEST TESTTEST TEST TESTTEST TEST TESTTEST TEST TESTTEST TEST TESTTEST TEST TEST</div>
+        
+        
+      </main>
+    </div>
+  </div>
+</body>
+</html>
