@@ -47,16 +47,12 @@ body {
   width: 140px;
   height: 50px;
   background: #303030;
-  border-radius: 10px;
-  font-weight: 500;
-  font-size: clamp(16px, 2vw, 20px); /* responsive font size */
-  color: #FFFFFF;
-  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  padding: 12px;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 
