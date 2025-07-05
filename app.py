@@ -5,28 +5,36 @@ import os
 from Main import sort, clear_playlists, top20_songs, artistTop, topArtistsSongs, get_all_playlists, getName
 from dotenv import load_dotenv
 
+
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
-def get_spotify_oauth():
-    return SpotifyOAuth(
+
+def get_token():
+    sp_oauth = SpotifyOAuth(
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
         scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative user-top-read"
     )
 
-def get_token():
-    sp_oauth = get_spotify_oauth()
     token_info = session.get("token_info", None)
     if not token_info:
         raise Exception("No token info in session")
+
     if sp_oauth.is_token_expired(token_info):
         token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-        session["token_info"] = token_info
+
+    session["token_info"] = token_info
     return token_info
+
+sp = None
+
+#playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
+
 
 @app.route("/")
 def main():
@@ -36,132 +44,107 @@ def main():
 @app.route('/about')
 def about_page():
     is_logged_in = "token_info" in session
-    name = None
+
     if is_logged_in:
-        try:
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            name = getName(sp)
-        except Exception as e:
-            print(f"Error in about_page: {e}")
-    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    else:
+        sp = None
+
+    return render_template('About/index.html', is_logged_in=is_logged_in)
 
 @app.route('/help')
 def help_page():
     is_logged_in = "token_info" in session
-    name = None
+
     if is_logged_in:
-        try:
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            name = getName(sp)
-        except Exception as e:
-            print(f"Error in help_page: {e}")
-    return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    else:
+        sp = None
+
+    return render_template("Help/index.html", is_logged_in=is_logged_in)
+
 
 @app.route("/functions", methods=["GET", "POST"])
 def functions():
     is_logged_in = "token_info" in session
     if not is_logged_in:
-        return redirect("/")
+        return redirect(url_for('login'))
 
-    name = None
-    #try:
-    #    token_info = get_token()
-    #    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    #    name = getName(sp)
-    #except Exception as e:
-    #    print(f"Error fetching Spotify token or user info: {e}")
-    #    return redirect("/")
-
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    playlists = get_all_playlists(sp)
     message = None
-    playlists = []
 
     if request.method == "POST":
-        func = request.form.get("function")
+        action = request.form.get('action')
+        if action == 'sort':
+            selected_Songs = request.form.get('numSort')
+            selected_playlist = request.form.get("selected_option")
+            sort(sp, int(selected_Songs), selected_playlist)
+            message = "Your liked songs have been sorted and added to the playlists."
+        elif action == 'clear':
+            clear_playlists(sp)
+            message = "All playlists have been cleared."
+        elif action == 'top20_songs':
+            selected_time = request.form.get('time')
+            if selected_time != None:
+                top20_songs(sp, selected_time)
+                message = "Top 20 songs playlist has been created."
+            else:
+                message = "Choose time"
+        elif action == 'top10_artist':
+            selected_artist = request.form.get('artist')
+            if selected_artist != None:
+                message = artistTop(sp, selected_artist)
+            else:
+                message = "Choose artist"
+        elif action == 'topArtistsSongs':
+            selected_timeArt = request.form.get('timeTopArtist')
+            if selected_timeArt != None:
+                topArtistsSongs(sp, selected_timeArt)
+                message = "Playlist have been created"
+            else:
+                message = "Choose time"
 
-        if func == "sort":
-            try:
-                total = int(request.form.get("total", 10))
-                playlist = request.form.get("playlist")
-                sort(sp, total, playlist)
-                message = "Sorting complete!"
-            except Exception as e:
-                message = f"Error during sorting: {e}"
+        playlists = get_all_playlists(sp)
 
-        elif func == "clear":
-            try:
-                clear_playlists(sp)
-                message = "Playlists cleared!"
-            except Exception as e:
-                message = f"Error during clearing playlists: {e}"
+    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in)
 
-        elif func == "top20":
-            try:
-                time_range = request.form.get("timeRange")
-                top20_songs(sp, time_range)
-                message = "Top 20 songs playlist created!"
-            except Exception as e:
-                message = f"Error creating top 20 songs playlist: {e}"
 
-        elif func == "artistTop":
-            try:
-                artist = request.form.get("artistName")
-                result = artistTop(sp, artist)
-                message = result if result else "Artist top songs playlist created!"
-            except Exception as e:
-                message = f"Error creating artist top songs playlist: {e}"
-
-        elif func == "topArtistsSongs":
-            try:
-                time_range = request.form.get("timeRange")
-                topArtistsSongs(sp, time_range)
-                message = "Top artists songs playlist created!"
-            except Exception as e:
-                message = f"Error creating top artists songs playlist: {e}"
-
-    #try:
-    #    playlists = get_all_playlists(sp)
-    #except Exception as e:
-    #    print(f"Error fetching playlists: {e}")
-    #    playlists = []
-
-    return render_template(
-        "Functions/index.html",
-        is_logged_in=is_logged_in,
-        name=name,
-        message=message,
-        playlists=playlists
-    )
-
-@app.route("/login")
+@app.route('/login')
 def login():
-    sp_oauth = get_spotify_oauth()
+    sp_oauth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+        scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative user-top-read"
+    )
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
-@app.route("/callback")
-def callback():
-    sp_oauth = get_spotify_oauth()
-    session.clear()
-    code = request.args.get('code')
-
-    if not code:
-        return redirect('/')
-
-    try:
-        token_info = sp_oauth.get_access_token(code)
-    except Exception as e:
-        print(f"Error getting access token: {e}")
-        return redirect('/')
-
-    session["token_info"] = token_info
-    return redirect("/functions")
-
-@app.route("/logout")
+@app.route('/logout')
 def logout():
-    session.clear()
-    return redirect("/")
+    session.clear()  # Clear all session data (token, etc.)
+    return redirect(url_for('main'))  # Redirect to home or login page
+
+
+@app.route('/callback')
+def callback():
+    sp_oauth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+        scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative user-top-read"
+    )
+
+    code = request.args.get('code')
+    token_info = sp_oauth.get_access_token(code, as_dict=True)
+    session["token_info"] = token_info
+    return redirect(url_for('main'))
+
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
