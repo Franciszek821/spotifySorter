@@ -154,7 +154,7 @@ body {
 
 .spinner {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #1db954; /* Spotify green */
+  border-top: 8px solid #181818; 
   border-radius: 50%;
   width: 60px;
   height: 60px;
