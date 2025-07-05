@@ -202,20 +202,25 @@ def clear_playlists(sp):
             break
 
 def top20_songs(sp, selected_time):
+    playlist_name = f"Top20 {selected_time}"
     topSongs = safe_spotify_call(sp.current_user_top_tracks, limit=20, offset=0, time_range=selected_time)
-    for song in topSongs['items']:
-        if not checkIfPlaylistExists(sp, "Top20" + str(selected_time)):
-            safe_spotify_call(
-                sp.user_playlist_create,
-                user=safe_spotify_call(sp.current_user)['id'],
-                name=f"Top20{selected_time}",
-                public=False,
-                description="Made by Spotify Sorter"
-            )
 
-        playlist_id = get_playlist_id_by_name(sp, "Top20" + str(selected_time))
-        if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
-            safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+    if not checkIfPlaylistExists(sp, playlist_name):
+        user_id = safe_spotify_call(sp.current_user)['id']
+        safe_spotify_call(
+            sp.user_playlist_create,
+            user=user_id,
+            name=playlist_name,
+            public=False,
+            description="Made by Spotify Sorter"
+        )
+
+    playlist_id = get_playlist_id_by_name(sp, playlist_name)
+    if playlist_id:
+        for song in topSongs['items']:
+            if not checkIfSongInPlaylist(sp, song['id'], playlist_id):
+                safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
+
 
 def artistTop(sp, selected_artist):
     artist_id = get_artist_id(sp, selected_artist)
@@ -246,7 +251,7 @@ def artistTop(sp, selected_artist):
 
 def topArtistsSongs(sp, selected_time):
     artist = safe_spotify_call(sp.current_user_top_artists, limit=5, offset=0, time_range=selected_time)
-    playlist_name = f"topArtistsSongs{selected_time}"
+    playlist_name = f"topArtistsSongs {selected_time}"
     if not checkIfPlaylistExists(sp, playlist_name):
         safe_spotify_call(
             sp.user_playlist_create,

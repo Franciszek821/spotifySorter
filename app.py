@@ -95,15 +95,21 @@ def functions():
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
             selected_time = request.form.get('time')
-            top20_songs(sp, selected_time)
-            message = "Top 20 songs playlist has been created."
+            if selected_time != None:
+                top20_songs(sp, selected_time)
+                message = "Top 20 songs playlist has been created."
+            else:
+                message = "Choose time"
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
             message = artistTop(sp, selected_artist)
         elif action == 'topArtistsSongs':
-            selected_time = request.form.get('timeTopArtist')
-            message = "Playlist have been created"
-            topArtistsSongs(sp, selected_time)
+            selected_timeArt = request.form.get('timeTopArtist')
+            if selected_timeArt != None:
+                topArtistsSongs(sp, selected_timeArt)
+                message = "Playlist have been created"
+            else:
+                message = "Choose time"
 
         playlists = get_all_playlists(sp)
 
