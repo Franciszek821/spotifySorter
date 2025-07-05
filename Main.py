@@ -7,20 +7,24 @@ from spotipy.exceptions import SpotifyException
 # Define decades
 playlistsLIST = ["2020", "2010", "2000", "1990", "1980", "1970", "1960", "1950", "1940", "older"]
 
-# Retry-safe Spotify API call wrapper
 def safe_spotify_call(func, *args, max_retries=5, **kwargs):
     for attempt in range(max_retries):
         try:
             return func(*args, **kwargs)
         except SpotifyException as e:
             if e.http_status == 429:
-                wait_time = int(e.headers.get("Retry-After", 1))
-                print(f"[Rate limited] Waiting {wait_time}s...")
+                retry_after = e.headers.get("Retry-After")
+                if retry_after is None:
+                    wait_time = 5  # fallback if header missing
+                else:
+                    wait_time = int(retry_after)
+                print(f"[Rate limited] Waiting {wait_time} seconds before retrying...")
                 time.sleep(wait_time)
             else:
-                raise
+                print(f"[SpotifyException] {e}, retry {attempt+1}/{max_retries}")
+                time.sleep(2)
         except Exception as e:
-            print(f"[Retry {attempt+1}/{max_retries}] Error: {e}")
+            print(f"[Exception] {e}, retry {attempt+1}/{max_retries}")
             time.sleep(2)
     raise Exception("Max retries exceeded for Spotify API call")
 
@@ -155,7 +159,7 @@ def sort(sp, total_to_get, playlist):
     user_id = safe_spotify_call(sp.current_user)['id']
 
     for i in tracks[:total_to_get]:
-        time.sleep(0.2)
+        time.sleep(1)
         song_id = i['track']['id']
         track = safe_spotify_call(sp.track, song_id)
 
