@@ -26,7 +26,38 @@ function hideArtist() {
   document.getElementById("artist").classList.add("hidden");
 }
 
+function hideLoginShowLogOut() {
+  const loginButton = document.getElementById("loginButton");
+  const logoutButton = document.getElementById("logoutButton");
+
+  loginButton.classList.add("hidden");
+  loginButton.disabled = true;
+
+  logoutButton.classList.remove("hidden");
+  logoutButton.disabled = false;
+}
+
+function showLoginHideLogOut() {
+  const loginButton = document.getElementById("loginButton");
+  const logoutButton = document.getElementById("logoutButton");
+
+  loginButton.classList.remove("hidden");
+  loginButton.disabled = false;
+
+  logoutButton.classList.add("hidden");
+  logoutButton.disabled = true;
+}
+
 window.onload = function () {
+  const isLoggedIn = document.body.getAttribute("data-logged-in") === "true";
+
+  if (isLoggedIn) {
+    hideLoginShowLogOut();
+  } else {
+    showLoginHideLogOut();
+  }
+
+
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("reveal") === "true") {
     revealChoices();
