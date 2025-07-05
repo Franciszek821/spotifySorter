@@ -74,7 +74,7 @@ def functions():
 
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    playlists = get_all_playlists(sp)
+    #playlists = get_all_playlists(sp)
     message = None
 
     if request.method == "POST":
