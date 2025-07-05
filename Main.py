@@ -14,9 +14,13 @@ def safe_spotify_call(func, *args, max_retries=5, **kwargs):
             return func(*args, **kwargs)
         except SpotifyException as e:
             if e.http_status == 429:
-                wait_time = int(e.headers.get("Retry-After", 1))
+                retry_after = e.headers.get("Retry-After")
+                if retry_after:
+                    wait_time = int(retry_after)
+                else:
+                    wait_time = 1
                 print(f"[Rate limited] Waiting {wait_time}s...")
-                time.sleep(wait_time)
+                time.sleep(wait_time + 1)  # add 1s buffer to be safe
             else:
                 raise
         except Exception as e:
@@ -155,7 +159,7 @@ def sort(sp, total_to_get, playlist):
     user_id = safe_spotify_call(sp.current_user)['id']
 
     for i in tracks[:total_to_get]:
-        time.sleep(0.2)
+        time.sleep(1)
         song_id = i['track']['id']
         track = safe_spotify_call(sp.track, song_id)
 
