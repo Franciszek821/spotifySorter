@@ -66,13 +66,13 @@ def functions():
         return redirect("/")
 
     name = None
-    try:
-        token_info = get_token()
-        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-        name = getName(sp)
-    except Exception as e:
-        print(f"Error fetching Spotify token or user info: {e}")
-        return redirect("/")
+    #try:
+    #    token_info = get_token()
+    #    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    #    name = getName(sp)
+    #except Exception as e:
+    #    print(f"Error fetching Spotify token or user info: {e}")
+    #    return redirect("/")
 
     message = None
     playlists = []
@@ -120,11 +120,11 @@ def functions():
             except Exception as e:
                 message = f"Error creating top artists songs playlist: {e}"
 
-    try:
-        playlists = get_all_playlists(sp)
-    except Exception as e:
-        print(f"Error fetching playlists: {e}")
-        playlists = []
+    #try:
+    #    playlists = get_all_playlists(sp)
+    #except Exception as e:
+    #    print(f"Error fetching playlists: {e}")
+    #    playlists = []
 
     return render_template(
         "Functions/index.html",
