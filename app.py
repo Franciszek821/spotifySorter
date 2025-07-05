@@ -59,7 +59,6 @@ def functions():
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
 
-    name = getName(sp)
 
 
     # ✅ Now you can safely fetch playlists
@@ -125,7 +124,8 @@ def functions():
 
         
     is_logged_in = "token_info" in session
-
+    if name == None and is_logged_in == True:
+        name = getName(sp)
 
     return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
 
@@ -133,11 +133,15 @@ def functions():
 @app.route('/help')
 def help_page():
     is_logged_in = "token_info" in session
+    if name == None and is_logged_in == True:
+        name = getName(sp)
     return render_template("Help/index.html", is_logged_in=is_logged_in)
 
 @app.route('/about')
 def about_page():
     is_logged_in = "token_info" in session
+    if name == None and is_logged_in == True:
+        name = getName(sp)
     return render_template('About/index.html', is_logged_in=is_logged_in)
 
 @app.route('/login')

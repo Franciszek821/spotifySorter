@@ -268,8 +268,9 @@ def topArtistsSongs(sp, selected_time):
 
 def getName(sp):
     user_info = sp.current_user()
-    username = user_info['id']
-    return username
+    display_name = user_info.get('display_name')
+
+    return display_name
 
 
 # make the timeout higher
