@@ -13,7 +13,7 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 
-name = None
+nmae = None
 
 
 def get_token():
@@ -58,6 +58,9 @@ def functions():
     # Refresh token if expired
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+
+    name = getName(sp)
+
 
     # ✅ Now you can safely fetch playlists
     playlists = get_all_playlists(sp)
@@ -139,7 +142,6 @@ def about_page():
 
 @app.route('/login')
 def login():
-    global name
     sp_oauth = SpotifyOAuth(
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
@@ -147,10 +149,6 @@ def login():
         scope="playlist-modify-public playlist-modify-private user-library-read playlist-read-private playlist-read-collaborative user-top-read"
     )
     auth_url = sp_oauth.get_authorize_url()
-    # Refresh token if expired
-    token_info = get_token()
-    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    name = getName(sp)
     return redirect(auth_url)
 
 @app.route('/logout')
