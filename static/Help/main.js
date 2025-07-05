@@ -41,10 +41,10 @@ function hideLoginShowLogOut() {
   const loginButton = document.getElementById("loginButton");
   const logoutButton = document.getElementById("logoutButton");
 
-  loginButton.classList.add("hidden");
+  loginButton.style.display = "none";
   loginButton.disabled = true;
 
-  logoutButton.classList.remove("hidden");
+  logoutButton.style.display = "inline-block"; // or "block", depending on layout
   logoutButton.disabled = false;
 }
 
@@ -52,10 +52,10 @@ function showLoginHideLogOut() {
   const loginButton = document.getElementById("loginButton");
   const logoutButton = document.getElementById("logoutButton");
 
-  loginButton.classList.remove("hidden");
+  loginButton.style.display = "inline-block";
   loginButton.disabled = false;
 
-  logoutButton.classList.add("hidden");
+  logoutButton.style.display = "none";
   logoutButton.disabled = true;
 }
 
