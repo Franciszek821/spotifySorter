@@ -124,27 +124,19 @@ def functions():
 
         
     is_logged_in = "token_info" in session
-    if name == None and is_logged_in == True:
-        name = getName(sp)
 
     return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
 
 
 @app.route('/help')
 def help_page():
-    global name
     is_logged_in = "token_info" in session
-    if name == None and is_logged_in == True:
-        name = getName(sp)
-    return render_template("Help/index.html", is_logged_in=is_logged_in)
+    return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
 
 @app.route('/about')
 def about_page():
-    global name
     is_logged_in = "token_info" in session
-    if name == None and is_logged_in == True:
-        name = getName(sp)
-    return render_template('About/index.html', is_logged_in=is_logged_in)
+    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
 
 @app.route('/login')
 def login():
@@ -177,7 +169,18 @@ def callback():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
+
+    # Refresh and get access token (in case it needs refreshing)
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+
+    # Get and store display name in session
+    user_info = sp.current_user()
+    display_name = user_info.get('display_name', 'User')
+    session['display_name'] = display_name  # Save to session
+
     return redirect(url_for('main'))
+
 
 
 
