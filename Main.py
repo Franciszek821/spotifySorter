@@ -137,53 +137,73 @@ def checkIfSongInPlaylist(sp, song_id, playlist_id):
             return True
     return False
 
+
 def sort(sp, total_to_get, playlist):
-    playlist_id = None
+    # Fetch source tracks
     if playlist == "liked":
         tracks = get_all_liked_tracks(sp, total_to_get)
     else:
-        playlist_id = get_playlist_id_by_name(sp, playlist)
-        tracks = get_all_track_names(sp, playlist_id, total_to_get)
+        source_playlist_id = get_playlist_id_by_name(sp, playlist)
+        tracks = get_all_track_names(sp, source_playlist_id, total_to_get)
+
+    if not tracks:
+        return  # Nothing to do
+
+    # Cache all playlists once outside loop
+    existing_playlists = get_all_playlists(sp)
+
+    user_id = safe_spotify_call(sp.current_user)['id']
 
     for i in tracks[:total_to_get]:
         time.sleep(0.2)
         song_id = i['track']['id']
         track = safe_spotify_call(sp.track, song_id)
-        year = int(track['album']['release_date'].split("-")[0])
 
+        release_date = track['album'].get('release_date', '1900-01-01')
+        try:
+            year = int(release_date.split("-")[0])
+        except ValueError:
+            year = 1900  # fallback if date malformed
+
+        # Check decade playlists
         for pla in playlistsLIST:
             if pla == "older":
                 continue
 
-            if year >= int(pla) and year < int(pla) + 10:
-                playlists = get_all_playlists(sp)
-                if pla not in playlists:
+            start_year = int(pla)
+            if start_year <= year < start_year + 10:
+                playlist_name = f"{pla} from {playlist}"
+                if playlist_name not in existing_playlists:
                     safe_spotify_call(
                         sp.user_playlist_create,
-                        user=safe_spotify_call(sp.current_user)['id'],
-                        name=f"{pla} from {playlist}",
+                        user=user_id,
+                        name=playlist_name,
                         public=False,
                         description="Made by Spotify Sorter"
                     )
+                    existing_playlists = get_all_playlists(sp)  # refresh list
 
-                playlist_id = get_playlist_id_by_name(sp, pla)
-                if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                    safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+                target_playlist_id = get_playlist_id_by_name(sp, playlist_name)
+                if target_playlist_id and not checkIfSongInPlaylist(sp, song_id, target_playlist_id):
+                    safe_spotify_call(sp.playlist_add_items, playlist_id=target_playlist_id, items=[f"spotify:track:{song_id}"])
                 break
 
+        # Special case for older than 1940
         if year < 1940:
-            if not checkIfPlaylistExists(sp, "older"):
+            if "older" not in existing_playlists:
                 safe_spotify_call(
                     sp.user_playlist_create,
-                    user=safe_spotify_call(sp.current_user)['id'],
+                    user=user_id,
                     name="older",
                     public=False,
                     description="Made by Spotify Sorter"
                 )
+                existing_playlists = get_all_playlists(sp)
 
-            playlist_id = get_playlist_id_by_name(sp, "older")
-            if playlist_id and not checkIfSongInPlaylist(sp, song_id, playlist_id):
-                safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song_id}"])
+            older_playlist_id = get_playlist_id_by_name(sp, "older")
+            if older_playlist_id and not checkIfSongInPlaylist(sp, song_id, older_playlist_id):
+                safe_spotify_call(sp.playlist_add_items, playlist_id=older_playlist_id, items=[f"spotify:track:{song_id}"])
+
 
 def clear_playlists(sp):
     limit = 50
@@ -202,7 +222,7 @@ def clear_playlists(sp):
             break
 
 def top20_songs(sp, selected_time):
-    playlist_name = f"Top20 {selected_time}"
+    playlist_name = f"Top20 {selected_time}"    
     topSongs = safe_spotify_call(sp.current_user_top_tracks, limit=20, offset=0, time_range=selected_time)
 
     if not checkIfPlaylistExists(sp, playlist_name):

@@ -102,7 +102,10 @@ def functions():
                 message = "Choose time"
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
-            message = artistTop(sp, selected_artist)
+            if selected_artist != None:
+                message = artistTop(sp, selected_artist)
+            else:
+                message = "Choose artist"
         elif action == 'topArtistsSongs':
             selected_timeArt = request.form.get('timeTopArtist')
             if selected_timeArt != None:
