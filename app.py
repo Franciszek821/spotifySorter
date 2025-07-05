@@ -45,100 +45,69 @@ def main():
     is_logged_in = "token_info" in session
     return render_template("Main/index.html", is_logged_in=is_logged_in)
 
-@app.route("/functions", methods=["GET", "POST"])
-def functions():
-    global name
-    global playlists
-    message = None
-    token_info = session.get("token_info", None)
-
-    if not token_info:
-        return redirect(url_for('login'))
-
-    # Refresh token if expired
-    token_info = get_token()
-    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-
-
-
-    # ✅ Now you can safely fetch playlists
-    playlists = get_all_playlists(sp)
-
-    if request.method == "POST":
-        
-        action = request.form.get('action')
-        if action == 'sort':
-
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            selected_Songs = request.form.get('numSort')
-            selected_playlist = request.form.get("selected_option")
-            sort(sp, int(selected_Songs), selected_playlist)
-            message = "Your liked songs have been sorted and added to the playlists."
-            playlists = get_all_playlists(sp)
-        elif action == 'clear':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            clear_playlists(sp)
-            message = "All playlists have been cleared."
-            playlists = get_all_playlists(sp)
-        elif action == 'top20_songs':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            selected_time = request.form.get('time')
-            top20_songs(sp, selected_time)
-            message = "Top 20 songs playlist has been created."
-            playlists = get_all_playlists(sp)
-        elif action == 'top10_artist':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            selected_artist = request.form.get('artist')
-            message = artistTop(sp, selected_artist)        
-            playlists = get_all_playlists(sp)
-        elif action == 'topArtistsSongs':
-            token_info = session.get("token_info", None)
-            if not token_info:
-                return redirect(url_for('login'))
-            token_info = get_token()
-            sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-            selected_time = request.form.get('time')
-            topArtistsSongs(sp, selected_time)
-            playlists = get_all_playlists(sp)
-        
-            
-
-        
-            
-
-        
+@app.route('/about')
+def about_page():
     is_logged_in = "token_info" in session
 
-    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
+    name = None
+    if is_logged_in:
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+        name = getName(sp)
+
+    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
 
 
 @app.route('/help')
 def help_page():
-    global name
     is_logged_in = "token_info" in session
+
+    name = None
+    if is_logged_in:
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+        name = getName(sp)
+
     return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
 
-@app.route('/about')
-def about_page():
-    global name
+
+@app.route("/functions", methods=["GET", "POST"])
+def functions():
     is_logged_in = "token_info" in session
-    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
+    if not is_logged_in:
+        return redirect(url_for('login'))
+
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    name = getName(sp)
+    playlists = get_all_playlists(sp)
+    message = None
+
+    if request.method == "POST":
+        action = request.form.get('action')
+        if action == 'sort':
+            selected_Songs = request.form.get('numSort')
+            selected_playlist = request.form.get("selected_option")
+            sort(sp, int(selected_Songs), selected_playlist)
+            message = "Your liked songs have been sorted and added to the playlists."
+        elif action == 'clear':
+            clear_playlists(sp)
+            message = "All playlists have been cleared."
+        elif action == 'top20_songs':
+            selected_time = request.form.get('time')
+            top20_songs(sp, selected_time)
+            message = "Top 20 songs playlist has been created."
+        elif action == 'top10_artist':
+            selected_artist = request.form.get('artist')
+            message = artistTop(sp, selected_artist)
+        elif action == 'topArtistsSongs':
+            selected_time = request.form.get('time')
+            topArtistsSongs(sp, selected_time)
+
+        playlists = get_all_playlists(sp)
+
+    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
+
 
 @app.route('/login')
 def login():
@@ -171,18 +140,7 @@ def callback():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
-
-    # Refresh and get access token (in case it needs refreshing)
-    token_info = get_token()
-    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-
-    # Get and store display name in session
-    user_info = sp.current_user()
-    display_name = user_info.get('display_name', 'User')
-    session['display_name'] = display_name  # Save to session
-
     return redirect(url_for('main'))
-
 
 
 
