@@ -132,6 +132,7 @@ def functions():
 
 @app.route('/help')
 def help_page():
+    global name
     is_logged_in = "token_info" in session
     if name == None and is_logged_in == True:
         name = getName(sp)
@@ -139,6 +140,7 @@ def help_page():
 
 @app.route('/about')
 def about_page():
+    global name
     is_logged_in = "token_info" in session
     if name == None and is_logged_in == True:
         name = getName(sp)
