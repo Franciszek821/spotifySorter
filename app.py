@@ -47,22 +47,22 @@ def main():
 
 @app.route("/functions", methods=["GET", "POST"])
 def functions():
-    global playlists
-    message = None
-    token_info = session.get("token_info", None)
-
-    
-
-    # Refresh token if expired
-    token_info = get_token()
-    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-
-    # ✅ Now you can safely fetch playlists
-    playlists = get_all_playlists(sp)
 
     if request.method == "POST":
+        global playlists
+        message = None
+        token_info = session.get("token_info", None)
+    
         if not token_info:
             return redirect(url_for('login'))
+    
+        # Refresh token if expired
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    
+        # ✅ Now you can safely fetch playlists
+        playlists = get_all_playlists(sp)
+           
         action = request.form.get('action')
         if action == 'sort':
 
