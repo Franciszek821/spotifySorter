@@ -51,8 +51,7 @@ def functions():
     message = None
     token_info = session.get("token_info", None)
 
-    if not token_info:
-        return redirect(url_for('login'))
+    
 
     # Refresh token if expired
     token_info = get_token()
@@ -62,7 +61,8 @@ def functions():
     playlists = get_all_playlists(sp)
 
     if request.method == "POST":
-        
+        if not token_info:
+            return redirect(url_for('login'))
         action = request.form.get('action')
         if action == 'sort':
 

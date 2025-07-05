@@ -55,5 +55,11 @@ body {
   cursor: pointer;
 }
 
+/* Utility */
+.hidden {
+  display: none;
+
+}
+
 
 
