@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='Functions/style.css') }}">
   <script defer src="{{ url_for('static', filename='Functions/main.js') }}"></script>
 </head>
-<body>
+<body data-logged-in="{{ 'true' if 'token_info' in session else 'false' }}">
   <div class="layout">
     <!-- Header -->
     <header class="header">

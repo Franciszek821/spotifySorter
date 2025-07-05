@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='Main/style.css') }}">
 </head>
-<body>
+<body data-logged-in="{{ 'true' if 'token_info' in session else 'false' }}">
     <div class="main-container">
       <div class="spotify-sorter">SPOTIFY SORTER</div>
       <div class="button-container">
