@@ -246,7 +246,7 @@ def artistTop(sp, selected_artist):
 
 def topArtistsSongs(sp, selected_time):
     artist = safe_spotify_call(sp.current_user_top_artists, limit=5, offset=0, time_range=selected_time)
-    playlist_name = f"topArtistsSongs"
+    playlist_name = f"topArtistsSongs{selected_time}"
     if not checkIfPlaylistExists(sp, playlist_name):
         safe_spotify_call(
             sp.user_playlist_create,

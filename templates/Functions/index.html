@@ -62,7 +62,7 @@
             <button class="delete" type="submit" name="action" value="clear">Delete Playlists</button>
             <button class="top20" type="button" onclick="revealChoices(); hideButtons();">Top 20 Songs</button>
             <button class="top10fromArt" type="button" onclick="revealArtist(); hideButtons();">Top 10 by Artist</button>
-            <button class="topArtist" type="submit" name="action" value="topArtistsSongs">Top from Top 5 Artists</button>
+            <button class="top20" type="button" onclick="revealChoicesTopArtists(); hideButtons();">Top from Top 5 Artists</button>
           </div>
 
           <!-- Choices -->
@@ -74,6 +74,17 @@
 
             <button type="submit" name="action" value="top20_songs">Confirm</button>
             <button type="button" onclick="hideChoices(); revealButtons();">Cancel</button>
+          </div>
+
+          <!-- ChoicesTopArtistsSongs -->
+          <div id="choicesTopArtists" class="form-section hidden">
+            <p>Select the time range for top 20 songs:</p>
+            <label><input type="radio" name="timeTopArtist" value="short_term" /> Short term (4 weeks)</label><br />
+            <label><input type="radio" name="timeTopArtist" value="medium_term" /> Medium term (6 months)</label><br />
+            <label><input type="radio" name="timeTopArtist" value="long_term" /> All time</label><br />
+
+            <button class="topArtist" type="submit" name="action" value="topArtistsSongs">Confirm</button>
+            <button type="button" onclick="hideChoicesTopArtists(); revealButtons();">Cancel</button>
           </div>
 
           <!-- Number Sort -->

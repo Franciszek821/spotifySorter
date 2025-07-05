@@ -101,7 +101,8 @@ def functions():
             selected_artist = request.form.get('artist')
             message = artistTop(sp, selected_artist)
         elif action == 'topArtistsSongs':
-            selected_time = request.form.get('time')
+            selected_time = request.form.get('timeTopArtist')
+            message = "Playlist have been created"
             topArtistsSongs(sp, selected_time)
 
         playlists = get_all_playlists(sp)

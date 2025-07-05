@@ -5,6 +5,13 @@ function hideChoices() {
   document.getElementById("choices").classList.add("hidden");
 }
 
+function revealChoicesTopArtists() {
+  document.getElementById("choicesTopArtists").classList.remove("hidden");
+}
+function hideChoicesTopArtists() {
+  document.getElementById("choicesTopArtists").classList.add("hidden");
+}
+
 function revealNumberSort() {
   document.getElementById("numberSort").classList.remove("hidden");
 }
@@ -68,6 +75,7 @@ window.onload = function () {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("reveal") === "true") {
     revealChoices();
+    revealChoicesTopArtists
     revealNumberSort();
     hideButtons();
     revealArtist();
