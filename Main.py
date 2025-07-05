@@ -14,7 +14,8 @@ def safe_spotify_call(func, *args, max_retries=5, **kwargs):
             return func(*args, **kwargs)
         except SpotifyException as e:
             if e.http_status == 429:
-                wait_time = int(e.headers.get("Retry-After", 1))
+                retry_after = int(e.headers.get("Retry-After", 1))
+                wait_time = min(retry_after, 10)
                 print(f"[Rate limited] Waiting {wait_time}s...")
                 time.sleep(wait_time)
             else:

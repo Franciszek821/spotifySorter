@@ -5,11 +5,16 @@ import os
 from Main import sort, clear_playlists, top20_songs, artistTop, topArtistsSongs, get_all_playlists, getName
 from dotenv import load_dotenv
 
+
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
+
+
+name = None
+
 
 def get_token():
     sp_oauth = SpotifyOAuth(
@@ -25,13 +30,15 @@ def get_token():
 
     if sp_oauth.is_token_expired(token_info):
         token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-        session["token_info"] = token_info
 
-    return token_info['access_token']
+    session["token_info"] = token_info
+    return token_info
 
-def get_spotify_client():
-    access_token = get_token()
-    return spotipy.Spotify(auth=access_token, requests_timeout=30)
+sp = None
+
+#playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
+
+    
 
 @app.route("/")
 def main():
@@ -41,20 +48,28 @@ def main():
 @app.route('/about')
 def about_page():
     is_logged_in = "token_info" in session
+
     name = None
     if is_logged_in:
-        sp = get_spotify_client()
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
         name = getName(sp)
+
     return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
+
 
 @app.route('/help')
 def help_page():
     is_logged_in = "token_info" in session
+
     name = None
     if is_logged_in:
-        sp = get_spotify_client()
+        token_info = get_token()
+        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
         name = getName(sp)
+
     return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
+
 
 @app.route("/functions", methods=["GET", "POST"])
 def functions():
@@ -62,7 +77,8 @@ def functions():
     if not is_logged_in:
         return redirect(url_for('login'))
 
-    sp = get_spotify_client()
+    token_info = get_token()
+    sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
     name = getName(sp)
     playlists = get_all_playlists(sp)
     message = None
@@ -79,20 +95,20 @@ def functions():
             message = "All playlists have been cleared."
         elif action == 'top20_songs':
             selected_time = request.form.get('time')
-            if selected_time is not None:
+            if selected_time != None:
                 top20_songs(sp, selected_time)
                 message = "Top 20 songs playlist has been created."
             else:
                 message = "Choose time"
         elif action == 'top10_artist':
             selected_artist = request.form.get('artist')
-            if selected_artist is not None:
+            if selected_artist != None:
                 message = artistTop(sp, selected_artist)
             else:
                 message = "Choose artist"
         elif action == 'topArtistsSongs':
             selected_timeArt = request.form.get('timeTopArtist')
-            if selected_timeArt is not None:
+            if selected_timeArt != None:
                 topArtistsSongs(sp, selected_timeArt)
                 message = "Playlist have been created"
             else:
@@ -101,6 +117,7 @@ def functions():
         playlists = get_all_playlists(sp)
 
     return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
+
 
 @app.route('/login')
 def login():
@@ -116,7 +133,10 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()  # Clear all session data (token, etc.)
-    return redirect(url_for('main'))
+    return redirect(url_for('main'))  # Redirect to home or login page
+
+
+
 
 @app.route('/callback')
 def callback():
@@ -128,9 +148,13 @@ def callback():
     )
 
     code = request.args.get('code')
-    token_info = sp_oauth.get_access_token(code)
+    token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
     return redirect(url_for('main'))
+
+
+
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
