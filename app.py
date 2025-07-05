@@ -13,7 +13,7 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 
-nmae = None
+name = None
 
 
 def get_token():
