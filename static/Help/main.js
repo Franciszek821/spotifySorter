@@ -38,13 +38,25 @@ function hideTopArtist() {
 }
 
 function hideLoginShowLogOut() {
-  document.getElementById("loginButton").classList.add("hidden");
-  document.getElementById("logoutButton").classList.remove("hidden");
+  const loginButton = document.getElementById("loginButton");
+  const logoutButton = document.getElementById("logoutButton");
+
+  loginButton.classList.add("hidden");
+  loginButton.disabled = true;
+
+  logoutButton.classList.remove("hidden");
+  logoutButton.disabled = false;
 }
 
 function showLoginHideLogOut() {
-  document.getElementById("loginButton").classList.remove("hidden");
-  document.getElementById("logoutButton").classList.add("hidden");
+  const loginButton = document.getElementById("loginButton");
+  const logoutButton = document.getElementById("logoutButton");
+
+  loginButton.classList.remove("hidden");
+  loginButton.disabled = false;
+
+  logoutButton.classList.add("hidden");
+  logoutButton.disabled = true;
 }
 
 window.onload = function () {
