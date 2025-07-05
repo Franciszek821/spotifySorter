@@ -266,7 +266,10 @@ def topArtistsSongs(sp, selected_time):
             if playlist_id and not checkIfSongInPlaylist(sp, song['id'], playlist_id):
                 safe_spotify_call(sp.playlist_add_items, playlist_id=playlist_id, items=[f"spotify:track:{song['id']}"])
 
-
+def getName(sp):
+    user_info = sp.current_user()
+    username = user_info['id']
+    return username
 
 
 # make the timeout higher

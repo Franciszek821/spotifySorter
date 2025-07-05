@@ -15,7 +15,10 @@
       <a href = "{{ url_for('main')}}">
         <button class="spotifySorter">SPOTIFY SORTER</button>
       </a>
-      <span class="textName">name</span>
+
+      {% if name %}
+            <span class="textName">{{ name }}</span>
+      {% endif %}
     </header>
 
     <!-- Content -->
