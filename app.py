@@ -13,6 +13,9 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 
+name = None
+
+
 def get_token():
     sp_oauth = SpotifyOAuth(
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
@@ -35,6 +38,7 @@ sp = None
 
 #playlist = ["chuj", "chuj2", "chuj3", "chuj4", "chuj5", "chuj6", "chuj7", "chuj8", "chuj9", "chuj10"]
 
+    
 
 @app.route("/")
 def main():
@@ -45,25 +49,26 @@ def main():
 def about_page():
     is_logged_in = "token_info" in session
 
+    name = None
     if is_logged_in:
         token_info = get_token()
         sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    else:
-        sp = None
+        name = getName(sp)
 
-    return render_template('About/index.html', is_logged_in=is_logged_in)
+    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
+
 
 @app.route('/help')
 def help_page():
     is_logged_in = "token_info" in session
 
+    name = None
     if is_logged_in:
         token_info = get_token()
         sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-    else:
-        sp = None
+        name = getName(sp)
 
-    return render_template("Help/index.html", is_logged_in=is_logged_in)
+    return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
 
 
 @app.route("/functions", methods=["GET", "POST"])
@@ -74,6 +79,8 @@ def functions():
 
     token_info = get_token()
     sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
+    #name = getName(sp)
+    playlists = []
     #playlists = get_all_playlists(sp)
     message = None
 
@@ -110,7 +117,7 @@ def functions():
 
         playlists = get_all_playlists(sp)
 
-    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in)
+    return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in, name=name)
 
 
 @app.route('/login')
@@ -130,6 +137,8 @@ def logout():
     return redirect(url_for('main'))  # Redirect to home or login page
 
 
+
+
 @app.route('/callback')
 def callback():
     sp_oauth = SpotifyOAuth(
@@ -143,6 +152,9 @@ def callback():
     token_info = sp_oauth.get_access_token(code, as_dict=True)
     session["token_info"] = token_info
     return redirect(url_for('main'))
+
+
+
 
 
 if __name__ == "__main__":
