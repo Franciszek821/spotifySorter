@@ -122,7 +122,6 @@ def functions():
         
     is_logged_in = "token_info" in session
 
-    message = "You are logged in." if is_logged_in else "You are not logged in."
 
     return render_template("Functions/index.html", message=message, my_list=playlists, is_logged_in=is_logged_in)
 
