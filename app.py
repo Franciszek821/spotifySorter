@@ -130,11 +130,13 @@ def functions():
 
 @app.route('/help')
 def help_page():
+    global name
     is_logged_in = "token_info" in session
     return render_template("Help/index.html", is_logged_in=is_logged_in, name=name)
 
 @app.route('/about')
 def about_page():
+    global name
     is_logged_in = "token_info" in session
     return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
 
