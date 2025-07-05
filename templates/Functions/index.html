@@ -9,6 +9,9 @@
   <script defer src="{{ url_for('static', filename='Functions/main.js') }}"></script>
 </head>
 <body data-logged-in="{{ 'true' if 'token_info' in session else 'false' }}">
+  <div id="loader" class="loader-wrapper" style="display: none;">
+    <div class="spinner"></div>
+  </div>
   <div class="layout">
     <!-- Header -->
     <header class="header">
@@ -49,7 +52,7 @@
       <main class="main">
         <h2 class="textFunctions">FUNCTIONS</h2>
 
-        <form id="mainForm" method="post">
+        <form id="mainForm" method="post" onsubmit="showLoader()">
           {% if message %}
             <p class="text-block">{{ message }}</p>
           {% endif %}

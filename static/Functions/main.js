@@ -26,6 +26,13 @@ function hideArtist() {
   document.getElementById("artist").classList.add("hidden");
 }
 
+function showLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) {
+    loader.style.display = "flex";
+  }
+}
+
 function hideLoginShowLogOut() {
   const loginButton = document.getElementById("loginButton");
   const logoutButton = document.getElementById("logoutButton");
