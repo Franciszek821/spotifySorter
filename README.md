@@ -1,7 +1,3 @@
-Understood. Here's the revised `README.md` with **no code blocks** used for instructions, only for actual code or terminal commands where necessary. Everything else is in plain text, cleanly formatted and ready for GitHub.
-
----
-
 # Spotify Automation Tool
 
 Organize your liked songs and generate custom playlists based on various sorting criteria.
