@@ -31,10 +31,6 @@
         <a href="{{ url_for('help_page')}}">
           <button class="help">HELP</button>
         </a>
-                
-        <a href="{{ url_for('about_page') }}">
-          <button class="about">ABOUT</button>
-        </a>
 
         <a href="{{ url_for('logout') }}"  id="logoutButton">
           <button class="login">LOGOUT</button>
@@ -59,11 +55,11 @@
             <button class="topArtist" type="button" onclick="revealTopArtist(); hideSort(); hideDelete(); hideTop20(); hideTop10fromArt();">Top from Top 5 Artists</button>
           </div>
           <div class="text-block">
-            <div class="textSort" id="textSort">test sort</div>
-            <div class="textDelete" id="textDelete">test delete</div>
-            <div class="textTop20" id="textTop20">test top20</div>
-            <div class="textTop10fromArt" id="textTop10fromArt">test top10fromArt</div>
-            <div class="textTopArtist" id="textTopArtist">test topArtist</div>
+            <div class="textSort" id="textSort">Sort songs from your playlist or liked songs by decade. Click the button to choose a playlist or your liked songs, and select how many songs you want to sort.</div>
+            <div class="textDelete" id="textDelete">Delete all playlists created by the app.</div>
+            <div class="textTop20" id="textTop20">Create a playlist with top 20 songs of the user, you have a choice to select the period.</div>
+            <div class="textTop10fromArt" id="textTop10fromArt">Generate a playlist of the top 10 songs by a selected artist.</div>
+            <div class="textTopArtist" id="textTopArtist">Create a playlist featuring the top 10 songs from your top 5 artists.</div>
           </div>
           
 

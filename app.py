@@ -45,17 +45,7 @@ def main():
     is_logged_in = "token_info" in session
     return render_template("Main/index.html", is_logged_in=is_logged_in)
 
-@app.route('/about')
-def about_page():
-    is_logged_in = "token_info" in session
 
-    name = None
-    if is_logged_in:
-        token_info = get_token()
-        sp = spotipy.Spotify(auth=token_info['access_token'], requests_timeout=30)
-        name = getName(sp)
-
-    return render_template('About/index.html', is_logged_in=is_logged_in, name=name)
 
 
 @app.route('/help')
