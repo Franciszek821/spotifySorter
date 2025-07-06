@@ -15,6 +15,8 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 name = None
 
+#print("Client ID:", os.environ.get("SPOTIFY_CLIENT_ID"))
+#print("Client Secret:", os.environ.get("SPOTIFY_CLIENT_SECRET"))
 
 def get_token():
     sp_oauth = SpotifyOAuth(

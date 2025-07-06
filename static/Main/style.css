@@ -61,5 +61,14 @@ body {
 
 }
 
+.bottom-text {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: smaller;
+    font-style: italic;
+    color: #555;
+}
+
 
 

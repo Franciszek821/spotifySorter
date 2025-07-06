@@ -82,7 +82,7 @@ window.onload = function () {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  revealSort();
+  hideSort();
   hideDelete();
   hideTop20();
   hideTop10fromArt();
