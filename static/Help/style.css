@@ -87,24 +87,16 @@ body {
   margin-bottom: 30px;
 }
 
-.hidden {
-  display: none;
-}
-
 .button-group button {
-  background-color: #303030;
+  width: 140px;
+  height: 50px;
+  background: #303030;
   color: white;
+  font-size: 16px;
   border: none;
-  padding: 10px 15px;
-  margin-right: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
-
-.button-group button.active {
-  background-color: #181818;
-}
-
-
 
 /* Forms */
 .form-section {

@@ -47,20 +47,19 @@
 
         <form id="mainForm" method="post">
           <div class="text-block">The page to help with functions of the website</div>
-          <div class="button-group">
-            <button onclick="showText('textSort')">Sort</button>
-            <button onclick="showText('textDelete')">Delete</button>
-            <button onclick="showText('textTop20')">Top 20</button>
-            <button onclick="showText('textTop10fromArt')">Top 10 from Artist</button>
-            <button onclick="showText('textTopArtist')">Top Artists</button>
+          <div id="buttons" class="button-group">
+            <button class="sort" type="button" onclick="revealSort(); hideDelete(); hideTop20(); hideTop10fromArt(); hideTopArtist();">Sort Playlists</button>
+            <button class="delete" type="button" onclick="revealDelete(); hideSort(); hideTop20(); hideTop10fromArt(); hideTopArtist();">Delete Playlists</button>
+            <button class="top20" type="button" onclick="revealTop20(); hideSort(); hideDelete(); hideTop10fromArt(); hideTopArtist();">Top 20 Songs</button>
+            <button class="top10fromArt" type="button" onclick="revealTop10fromArt(); hideSort(); hideDelete(); hideTop20(); hideTopArtist();">Top 10 by Artist</button>
+            <button class="topArtist" type="button" onclick="revealTopArtist(); hideSort(); hideDelete(); hideTop20(); hideTop10fromArt();">Top from Top 5 Artists</button>
           </div>
-
           <div class="text-block">
-            <div class="" id="textSort">Sort songs from your playlist or liked songs by decade. Click the button to choose a playlist or your liked songs, and select how many songs you want to sort.</div>
-            <div class="hidden" id="textDelete">Delete all playlists created by the app.</div>
-            <div class="hidden" id="textTop20">Create a playlist with top 20 songs of the user, you have a choice to select the period.</div>
-            <div class="hidden" id="textTop10fromArt">Generate a playlist of the top 10 songs by a selected artist.</div>
-            <div class="hidden" id="textTopArtist">Create a playlist featuring the top 10 songs from your top 5 artists.</div>
+            <div class="textSort" id="textSort">Sort songs from your playlist or liked songs by decade. Click the button to choose a playlist or your liked songs, and select how many songs you want to sort.</div>
+            <div class="textDelete" id="textDelete">Delete all playlists created by the app.</div>
+            <div class="textTop20" id="textTop20">Create a playlist with top 20 songs of the user, you have a choice to select the period.</div>
+            <div class="textTop10fromArt" id="textTop10fromArt">Generate a playlist of the top 10 songs by a selected artist.</div>
+            <div class="textTopArtist" id="textTopArtist">Create a playlist featuring the top 10 songs from your top 5 artists.</div>
           </div>
           
 

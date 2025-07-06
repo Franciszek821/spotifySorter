@@ -1,27 +1,45 @@
-function activateTab(button, textId) {
-  const allTextIds = [
-    "textSort",
-    "textDelete",
-    "textTop20",
-    "textTop10fromArt",
-    "textTopArtist"
-  ];
-
-  // Hide all text sections
-  allTextIds.forEach(id => {
-    document.getElementById(id).classList.add("hidden");
-  });
-
-  // Show selected one
-  document.getElementById(textId).classList.remove("hidden");
-
-  // Handle active button styling
-  const buttons = document.querySelectorAll(".button-group button");
-  buttons.forEach(btn => btn.classList.remove("active"));
-  button.classList.add("active");
+function revealSort() {
+  document.getElementById("textSort").classList.remove("hidden");
+}
+function hideSort() {
+  document.getElementById("textSort").classList.add("hidden");
 }
 
-// Login/Logout UI toggling
+function revealDelete() {
+  document.getElementById("textDelete").classList.remove("hidden");
+}
+
+function hideDelete() {
+  document.getElementById("textDelete").classList.add("hidden");
+}
+
+function revealTop20() {
+  document.getElementById("textTop20").classList.remove("hidden");
+}
+
+function hideTop20() {
+  document.getElementById("textTop20").classList.add("hidden");
+}
+
+function revealTop10fromArt() {
+  document.getElementById("textTop10fromArt").classList.remove("hidden");
+}
+
+function hideTop10fromArt() {
+  document.getElementById("textTop10fromArt").classList.add("hidden");
+}
+
+function revealTopArtist() {
+  document.getElementById("textTopArtist").classList.remove("hidden");
+}
+
+function hideTopArtist() {
+  document.getElementById("textTopArtist").classList.add("hidden");
+}
+
+
+
+
 function hideLoginShowLogOut() {
   const loginButton = document.getElementById("loginButton");
   const logoutButton = document.getElementById("logoutButton");
@@ -46,16 +64,27 @@ function showLoginHideLogOut() {
 
 window.onload = function () {
   const isLoggedIn = document.body.getAttribute("data-logged-in") === "true";
-  isLoggedIn ? hideLoginShowLogOut() : showLoginHideLogOut();
 
-  // Show all text sections if URL includes ?reveal=true
+  if (isLoggedIn) {
+    hideLoginShowLogOut();
+  } else {
+    showLoginHideLogOut();
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("reveal") === "true") {
-    ["textSort", "textDelete", "textTop20", "textTop10fromArt", "textTopArtist"].forEach(id => {
-      document.getElementById(id).classList.remove("hidden");
-    });
-  } else {
-    // Default state: show only Sort section
-    activateTab(document.querySelector(".button-group button"), "textSort");
+    revealSort();
+    revealDelete();
+    revealTop20();
+    revealTop10fromArt();
+    revealTopArtist();
   }
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+  revealSort();
+  hideDelete();
+  hideTop20();
+  hideTop10fromArt();
+  hideTopArtist();
+});
